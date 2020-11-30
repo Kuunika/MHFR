@@ -6,7 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHospital,
   faEdit,
-  faPlusCircle
+  faPlusCircle,
+  faTrash
 } from "@fortawesome/free-solid-svg-icons";
 import Container from "../../atoms/Container";
 import OptionsBar from "../../molecules/FacilityViewOptionsBar";
@@ -21,8 +22,10 @@ import styled from "styled-components";
 import { FacilityPages } from "../../../services/utils";
 import Button from "../../atoms/Button";
 import { Link } from "react-router-dom";
-import { isAdmin } from "../../../services/helpers";
+import { isAdmin, getUser } from "../../../services/helpers";
 import EmptyState from "../../atoms/FacilityDetailsEmptyState";
+import Ac from "../../atoms/Ac";
+import { acActions } from "../../../acl";
 
 library.add(faHospital, faEdit);
 
@@ -44,7 +47,12 @@ function index(props: Props) {
           lng: parseFloat(basic.geolocations.longitude)
         }
       : { lat: -13.9626121, lng: 33.7741195 };
-
+  const acAction =
+    activePage == FacilityPages.summary
+      ? "basic_details"
+      : activePage == FacilityPages.contact
+      ? "contact_location_details"
+      : activePage;
   return (
     <Container style={{ padding: "16px" }}>
       <Grid container spacing={3}>
@@ -54,13 +62,26 @@ function index(props: Props) {
             sub={basic.common_name ? basic.common_name : ""}
             icon={<FontAwesomeIcon icon={faHospital} />}
             options={
-              isAdmin() && (
-                <Link to="/facilities/add">
-                  <Button icon={<FontAwesomeIcon icon={faPlusCircle} />}>
-                    Add Facility
-                  </Button>
-                </Link>
-              )
+              <Ac
+                role={getUser().role}
+                action="facility:basic_details:create"
+                allowed={() => (
+                  <>
+                    {/* <Link to="/facilities/add">
+                      <Button icon={<FontAwesomeIcon icon={faPlusCircle} />}>
+                        Add Facility
+                      </Button>
+                    </Link> */}
+                    <Button
+                      icon={<FontAwesomeIcon icon={faTrash} />}
+                      theme="danger"
+                      onClick={props.archiveFacility}
+                    >
+                      Archive Facility
+                    </Button>
+                  </>
+                )}
+              />
             }
           />
         </Grid>
@@ -85,16 +106,31 @@ function index(props: Props) {
                       <CardTitle>
                         <div>{pageHeader}</div>
                         {isAdmin() && (
-                          <Link
-                            to={`/facilities/${basic.id}/${activePage}/edit`}
-                          >
-                            <Button
-                              theme="secondary"
-                              icon={<FontAwesomeIcon icon={faEdit} />}
-                            >
-                              Update Facility
-                            </Button>
-                          </Link>
+                          <>
+                            <Ac
+                              role={getUser().role}
+                              action={
+                                `facility:${acAction}:update` as acActions
+                              }
+                              allowed={() => (
+                                <Link
+                                  to={`/facilities/${basic.id}/${activePage}/edit`}
+                                >
+                                  <Button
+                                    theme="secondary"
+                                    icon={
+                                      <FontAwesomeIcon
+                                        icon={faEdit}
+                                        data-test="facilityUpdateButton"
+                                      />
+                                    }
+                                  >
+                                    Update Facility
+                                  </Button>
+                                </Link>
+                              )}
+                            />
+                          </>
                         )}
                       </CardTitle>
                     }
@@ -139,6 +175,7 @@ function index(props: Props) {
 }
 
 type Props = {
+  archiveFacility: Function;
   activePage: string;
   pageHeader: string;
   basic: any;

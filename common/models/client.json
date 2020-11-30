@@ -47,7 +47,7 @@
     {
       "accessType": "READ",
       "principalType": "ROLE",
-      "principalId": "admin",
+      "principalId": "$everyone",
       "permission": "ALLOW"
     },
     {
@@ -66,7 +66,33 @@
       "principalType": "ROLE",
       "principalId": "admin",
       "permission": "ALLOW",
+      "property": "createUser"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "updateUser"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
       "property": "archiveUser"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "requestPasswordReset"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "assignUserRole"
     }
   ],
   "methods": {}

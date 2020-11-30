@@ -12,7 +12,7 @@ import {
   Input
 } from "@material-ui/core";
 import styled from "styled-components";
-import { getServicesLeaves } from "../../../services/helpers";
+import { getServicesLeaves, OrderEntities } from "../../../services/helpers";
 import FormButtons from "../../atoms/FacilityFormButtons";
 import InputError from "../../atoms/InputError";
 
@@ -44,8 +44,7 @@ class ServicesForm extends React.Component<Props> {
       setSubmitting(false);
       return;
     }
-    this.props.onSubmit(values.services, "services", "Finish");
-    setSubmitting(false);
+    this.props.onSubmit(values.services, setSubmitting, "services", "Finish");
   };
 
   render() {
@@ -86,7 +85,10 @@ export function Form(props: any) {
     fromAdd
   } = props;
 
-  const servicesOptions = getServicesLeaves(dependancies.services.hierachy);
+  const servicesOptions = OrderEntities(
+    "service_name",
+    getServicesLeaves(dependancies.services.hierachy)
+  );
 
   const isSelected = (value: any) => {
     return values.services.filter((ser: any) => ser.id == value.id).length > 0;

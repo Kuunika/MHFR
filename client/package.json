@@ -26,7 +26,6 @@
     "@types/yup": "^0.26.13",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
-    "cypress": "^3.3.1",
     "formik": "^1.5.7",
     "history": "^4.9.0",
     "lodash": "^4.17.11",
@@ -34,12 +33,12 @@
     "react": "^16.8.6",
     "react-compound-slider": "^1.2.1",
     "react-dom": "^16.8.6",
-    "react-ga": "^2.6.0",
+    "react-ga": "^2.7.0",
     "react-google-maps": "^9.4.5",
     "react-materialize": "^2.6.0",
     "react-redux": "^7.0.3",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "3.0.1",
+    "react-scripts": "^3.4.3",
     "react-toastify": "^5.2.1",
     "react-tooltip": "^3.10.0",
     "recharts": "^1.6.2",
@@ -48,7 +47,7 @@
     "redux-promise-middleware": "^6.1.0",
     "styled-components": "^4.2.0",
     "sweetalert": "^2.1.2",
-    "typescript": "3.4.5",
+    "typescript": "3.8",
     "yup": "^0.27.0"
   },
   "scripts": {
@@ -74,6 +73,7 @@
     ]
   },
   "devDependencies": {
+    "cypress": "^3.8.2",
     "dotenv": "^8.0.0",
     "redux-logger": "^3.0.6"
   }

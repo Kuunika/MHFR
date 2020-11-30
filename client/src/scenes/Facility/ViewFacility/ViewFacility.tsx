@@ -47,6 +47,7 @@ function ViewFacility(props: Props) {
                 <NotFound />
               ) : (
                 <FacilityView
+                  archiveFacility={props.archiveFacility}
                   activePage={activePage}
                   pageHeader={pageHeader.length > 0 && pageHeader[0].name}
                   basic={basic}
@@ -116,6 +117,7 @@ type Props = {
   downloadFacility: Function;
   isLoading: boolean;
   badge: any;
+  archiveFacility: Function;
 };
 export default ViewFacility;
 
@@ -129,5 +131,4 @@ const MobileTitle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 40px;
 `;

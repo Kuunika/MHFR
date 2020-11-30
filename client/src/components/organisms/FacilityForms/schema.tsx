@@ -1,4 +1,6 @@
 import * as yup from "yup";
+import { check } from "../../atoms/Ac";
+import { getUser } from "../../../services/helpers";
 
 const REQUIRED_MESSAGE = "You can't leave this field blank";
 const PHONE_MIN_MESSAGE = "Invalid phone number";
@@ -41,7 +43,6 @@ export const contactSchema: yup.ObjectSchema<any> = yup.object().shape({
   catchmentPopulation: yup
     .number()
     .typeError(INVALID_NUM_MESSAGE)
-    .positive()
     .integer()
     .required(REQUIRED_MESSAGE),
   longitude: yup
@@ -91,12 +92,7 @@ export const basicSchema: yup.ObjectSchema<any> = yup.object().shape({
     .number()
     .typeError(REQUIRED_MESSAGE)
     .required(REQUIRED_MESSAGE)
-    .min(1, "Please select a district"),
-  registrationNumber: yup
-    .number()
-    .typeError(INVALID_NUM_MESSAGE)
-    .required(REQUIRED_MESSAGE)
-    .min(8, "Invalid Registration Number")
+    .min(1, "Please select a district")
 });
 
 export const getResourcesSchema: any = (resources: any) => {

@@ -6,11 +6,7 @@ import { Grid } from "@material-ui/core";
 import Heading from "../../components/atoms/SectionSubHeading";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faDownload,
-  faInfoCircle,
-  faQuestionCircle
-} from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 function index() {
   return (
@@ -56,27 +52,16 @@ function index() {
             <Heading>Useful Links</Heading>
             <TextContainer>
               <div>
-                <a href="/">
-                  <Icon icon={faDownload} />
-                  Download Guides
-                </a>
-              </div>
-              <div>
-                <a href="/">
+                <a href="https://www.health.gov.mw/" target="_blank">
                   <Icon icon={faInfoCircle} />
                   About Ministry of Health
                 </a>
               </div>
+
               <div>
-                <a href="/">
+                <a href="https://www.kuunika.org/" target="_blank">
                   <Icon icon={faInfoCircle} />
                   About Kuunika
-                </a>
-              </div>
-              <div>
-                <a href="/">
-                  <Icon icon={faQuestionCircle} />
-                  Help
                 </a>
               </div>
             </TextContainer>

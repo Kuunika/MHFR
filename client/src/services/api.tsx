@@ -2,6 +2,17 @@ import axios from "axios";
 
 const API = process.env.REACT_APP_API_URL;
 
+export const getUserRoles = () => {
+  const url = `${API}/Roles`;
+  const token = sessionStorage.getItem("token");
+  const header = {
+    headers: {
+      Authorization: `${token}`
+    }
+  };
+  return axios.get(url, header);
+};
+
 export const getUtilities = () => {
   const url = `${API}/Utilities`;
   return axios.get(url);
@@ -102,9 +113,7 @@ export const getFacilityServices = (
 ) => {
   const url =
     filter === null
-      ? `${API}/FacilityServices?filter=${JSON.stringify({
-          where: { facility_id: facilityId }
-        })}`
+      ? `${API}/FacilityServices/latest?id=${facilityId}`
       : `${API}/FacilityServices?filter=${JSON.stringify(filter)}`;
   return axios.get(url);
 };
@@ -118,6 +127,21 @@ export const getFacilityUtilities = (
       ? `${API}/FacilityUtilities/latest?id=${facilityId}`
       : `${API}/FacilityUtilities?filter=${JSON.stringify(filter)}`;
   return axios.get(url);
+};
+
+export const requestResetPassword = (data: { email: any }) => {
+  const url = `${API}/Clients/requestPasswordReset `;
+  return axios.post(url, data);
+};
+
+export const resetPassword = (data: { newPassword: String }, token: String) => {
+  const url = `${API}/Clients/reset-password `;
+  const header = {
+    headers: {
+      Authorization: `${token}`
+    }
+  };
+  return axios.post(url, data, header);
 };
 
 export const authenticateUser = (credentials: {
@@ -148,7 +172,7 @@ export const getUsers = (token: string) => {
 };
 
 export const addUser = (data: any, token: string) => {
-  const url = `${API}/clients/createAdmin`;
+  const url = `${API}/clients/createUser`;
   const header = {
     headers: {
       Authorization: `${token}`
@@ -158,13 +182,13 @@ export const addUser = (data: any, token: string) => {
 };
 
 export const putUser = (userId: number, data: any, token: string) => {
-  const url = `${API}/clients/${userId}`;
+  const url = `${API}/clients/${userId}/updateUser`;
   const header = {
     headers: {
       Authorization: `${token}`
     }
   };
-  return axios.patch(url, data, header);
+  return axios.patch(url, { data }, header);
 };
 
 export const publishFacility = (data: any, token: string) => {
@@ -175,6 +199,20 @@ export const publishFacility = (data: any, token: string) => {
     }
   };
   return axios.post(url, data, header);
+};
+
+export const archiveFacility = (
+  data: { id: any; archived_date: any },
+  token: string
+) => {
+  const url = `${API}/Facilities/${data.id}`;
+  const { archived_date } = data;
+  const header = {
+    headers: {
+      Authorization: `${token}`
+    }
+  };
+  return axios.patch(url, { archived_date }, header);
 };
 
 export const postBasicDetails = (data: any, token: string) => {
@@ -324,7 +362,7 @@ export const postFeedback = (data: any) => {
 };
 
 export const changePassword = (data: any, userId: number, token: string) => {
-  const url = `${API}/Client/${userId}`;
+  const url = `${API}/Clients/${userId}`;
   const header = {
     headers: {
       Authorization: `${token}`

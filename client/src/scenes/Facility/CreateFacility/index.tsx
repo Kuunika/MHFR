@@ -22,6 +22,9 @@ import { toast } from "react-toastify";
 import Notification from "../../../components/atoms/Notification";
 import RedirectOnMobile from "../../../components/atoms/RedirectOnMobile";
 import swal from "sweetalert";
+import Ac from "../../../components/atoms/Ac";
+import { getUser } from "../../../services/helpers";
+import Unauthorized from "../../Error/401";
 
 export class index extends Component<Props> {
   state = {
@@ -65,6 +68,7 @@ export class index extends Component<Props> {
         title: `You Did Not Finish Adding the Facility with name ${facility.details.facilityName}`,
         text:
           "Press Continue to continue from where you stopped or cancel to restart",
+        // @ts-ignore
         buttons: {
           cancel: "Cancel",
           confirm: "Continue"
@@ -181,7 +185,12 @@ export class index extends Component<Props> {
     return addFacility;
   };
 
-  onSubmit = async (values: any, key: string, nextTab: string) => {
+  onSubmit = async (
+    values: any,
+    setSubmitting: Function,
+    key: string,
+    nextTab: string
+  ) => {
     this.setFacilityDetails(key, values);
     if (nextTab == "Finish") {
       if (!(await this.handleSubmit())) {
@@ -215,6 +224,7 @@ export class index extends Component<Props> {
       icon: "warning",
       title: "Are You Sure You Want To Cancel Facility Add ?",
       text: "All data filled in will be lost",
+      // @ts-ignore
       buttons: {
         cancel: "No",
         confirm: "Yes"
@@ -230,17 +240,24 @@ export class index extends Component<Props> {
     return (
       <>
         <RedirectOnMobile />
-        <CreateFacility
-          sections={this.formSections}
-          active={this.state.active}
-          onSubmit={this.onSubmit}
-          onCancel={this.onCancel}
-          dependancies={this.props.dependancies}
-          facility={this.state.newFacility}
-          errors={{
-            networkError: this.state.networkError,
-            networkErrorSavingDetails: this.state.networkErrorSavingDetails
-          }}
+        <Ac
+          role={getUser().role}
+          action="facility:basic_details:create"
+          allowed={() => (
+            <CreateFacility
+              sections={this.formSections}
+              active={this.state.active}
+              onSubmit={this.onSubmit}
+              onCancel={this.onCancel}
+              dependancies={this.props.dependancies}
+              facility={this.state.newFacility}
+              errors={{
+                networkError: this.state.networkError,
+                networkErrorSavingDetails: this.state.networkErrorSavingDetails
+              }}
+            />
+          )}
+          denied={() => <Unauthorized />}
         />
       </>
     );

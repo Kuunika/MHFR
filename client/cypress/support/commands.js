@@ -12,14 +12,15 @@
 
 const END_POINT = `${Cypress.env("API_URL")}/`;
 
-Cypress.Commands.add("login", credentials => {
-  const RESOURCE = `Clients/login/`;
+Cypress.Commands.add("login", (credentials, userRole = null) => {
+  const RESOURCE = `clients/login`;
   const URL = `${END_POINT}${RESOURCE}`;
   cy.request("POST", URL, credentials).then(resp => {
     const token = resp.body.id;
+    const role = userRole ? userRole : resp.body.role;
     const userId = resp.body.userId;
 
-    const USER_RESOURCE = `Clients/${userId}`;
+    const USER_RESOURCE = `clients/${userId}`;
 
     const header = {
       Authorization: `${token}`
@@ -31,6 +32,10 @@ Cypress.Commands.add("login", credentials => {
       cy.window().then(win => {
         win.sessionStorage.setItem("token", token);
         win.sessionStorage.setItem("firstname", firstName);
+        win.sessionStorage.setItem(
+          "user",
+          JSON.stringify({ firstname: firstName, role })
+        );
       });
     });
   });
@@ -249,6 +254,19 @@ Cypress.Commands.add("quick_search", searchTerm => {
   const URL = `${END_POINT}${RESOURCE}?regex=${searchTerm}`;
   cy.request("GET", URL).then(res => {
     return res.body.data.slice(0, 5);
+  });
+});
+
+Cypress.Commands.add("fetch_user_groups", () => {
+  const RESOURCE = `Roles`;
+
+  const URL = `${END_POINT}${RESOURCE}`;
+
+  const headers = {
+    Authorization: `${sessionStorage.getItem("token")}`
+  };
+  cy.request({ method: "GET", url: URL, headers: headers }).then(res => {
+    return res.body;
   });
 });
 

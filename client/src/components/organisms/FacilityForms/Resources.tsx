@@ -12,8 +12,7 @@ function Basic(props: Props) {
   const { initialValues, schema, onSubmit } = props;
 
   const onNext = async (values: any, { setSubmitting, setErrors }: any) => {
-    onSubmit(values, "resources", "Utilities");
-    setSubmitting(false);
+    onSubmit(values, setSubmitting, "resources", "Utilities");
   };
 
   return (
@@ -57,7 +56,7 @@ export function Form(props: any) {
                   value={values && values[`resource_${resource.id}`]}
                   name={`resource_${resource.id}`}
                   label={`${resource.resource_name}`}
-                  placeholder="Enter Facility Postal Address"
+                  placeholder={`Enter Number of ${resource.resource_name}`}
                   error={
                     values &&
                     touched[`resource_${resource.id}`] &&

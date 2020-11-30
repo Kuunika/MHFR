@@ -6,13 +6,15 @@ import { Paper } from "@material-ui/core";
 const FacilityList = (props: Props) => {
   const { onSelect, className, data } = props;
   const facilitiesGridColumns = [
-    { name: "code", title: "CODE" },
+    { name: "code", title: "NEW CODE" },
+    { name: "code", title: "OLD CODE" },
     { name: "name", title: "NAME" },
-    { name: "common", title: "COMMON NAME" },
+    { name: "district", title: "DISTRICT" },
     { name: "ownership", title: "OWNERSHIP" },
     { name: "type", title: "TYPE" },
     { name: "status", title: "STATUS" },
-    { name: "district", title: "DISTRICT" },
+    { name: "latitude", title: "LATITUDE" },
+    { name: "longitude", title: "LONGITUDE" },
     { name: "dateOpened", title: "DATE OPENED" }
   ];
 

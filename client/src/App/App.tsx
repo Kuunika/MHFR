@@ -18,8 +18,8 @@ import Help from "../scenes/Help";
 import NotFound from "../scenes/Error/404";
 import Preloader from "../components/atoms/Preloader";
 import ErrorScreen from "../scenes/Error/500";
-import ForgotPassword from "../scenes/Users/ForgotPassword";
-import ResetPassword from "../scenes/Users/ResetPassword";
+import ForgotPassword from "../scenes/Users/PasswordReset/ForgotPassword.container";
+import ResetPassword from "../scenes/Users/PasswordReset/ResetPassword.container";
 import { connect } from "react-redux";
 import {
   fetchUtilities,
@@ -34,21 +34,10 @@ import {
   dispatchDependancyError,
   fetchFacilityTypes
 } from "../services/redux/actions/dependancies";
-import ReactGA from "react-ga";
+import { fetchUserDetails } from "../services/redux/actions/users";
 import { fetchFacilities } from "../services/redux/actions/facilities";
 import { ToastContainer, cssTransition } from "react-toastify";
-import { createBrowserHistory } from "history";
-
-const history: any = createBrowserHistory();
-
-const trackingId = "UA-128959156-2"; // Replace with your Google Analytics tracking ID
-ReactGA.initialize(trackingId);
-
-// Initialize google analytics page view tracking
-history.listen((location: any) => {
-  ReactGA.set({ page: location.pathname });
-  ReactGA.pageview(location.pathname);
-});
+import { isAdmin } from "../services/helpers";
 
 const Slide = cssTransition({
   enter: "slideIn",
@@ -82,11 +71,11 @@ const App: React.FC = (props: any) => {
       dispatchDependancyError();
     });
 
-    fetchServices().catch(() => {
+    fetchServiceTypes().catch(() => {
       dispatchDependancyError();
     });
 
-    fetchServiceTypes().catch(() => {
+    fetchServices().catch(() => {
       dispatchDependancyError();
     });
 
@@ -117,6 +106,20 @@ const App: React.FC = (props: any) => {
     fetchFacilityTypes().catch(() => {
       dispatchDependancyError();
     });
+
+    if (isAdmin()) {
+      let user: any = sessionStorage.getItem("user");
+      user = user ? JSON.parse(user) : false;
+
+      if (!user) {
+        sessionStorage.clear();
+      } else {
+        fetchUserDetails(
+          user.id as any,
+          sessionStorage.getItem("token") as any
+        );
+      }
+    }
   }, []);
 
   const isLoading = () => facilities.length == 0 && loading.fetchFacilities;
@@ -203,6 +206,7 @@ export default connect(
     fetchOperationalStatuses,
     dispatchDependancyError,
     fetchFacilities,
-    fetchFacilityTypes
+    fetchFacilityTypes,
+    fetchUserDetails
   }
 )(App);

@@ -32,6 +32,12 @@ export default (
         ...state,
         list: action.payload.data.data
       };
+
+    case actions.archiveFacility + "_FULFILLED":
+      return {
+        ...state,
+        list: state.list.filter((f: any) => f.id != action.payload.data.id)
+      };
     case actions.setSearchValue:
       return {
         ...state,
@@ -65,10 +71,14 @@ export default (
         ...state,
         current: {
           ...state.current,
-          services: getServicesHierachyForRedux(
-            action.payload.data,
-            action.meta.services.list,
-            action.meta.services.types
+          services: uniqWith(
+            getServicesHierachyForRedux(
+              action.payload.data.data,
+              action.meta.services.list,
+              action.meta.services.types
+            ),
+            (curSer: any, nextSer: any) =>
+              curSer.service.id == nextSer.service.id
           )
         }
       };

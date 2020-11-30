@@ -12,7 +12,12 @@ const Button = (props: Props) => {
     disabled,
     type
   } = props;
-  const btnTheme = theme ? themes[theme] : themes.primary;
+  const btnTheme = disabled
+    ? themes.default
+    : theme
+    ? themes[theme]
+    : themes.primary;
+
   const buttonClass = `waves-effect waves-light btn`;
 
   return (
@@ -22,7 +27,7 @@ const Button = (props: Props) => {
         style={style}
         disabled={disabled}
         className={buttonClass}
-        onClick={e => onClick && onClick()}
+        onClick={e => onClick && !disabled && onClick()}
         // @ts-ignore
         data-test={props["data-test"]}
       >
@@ -44,7 +49,13 @@ type Props = {
   color?: string;
   icon?: any;
   iconPosition?: "right" | "left";
-  theme?: "primary" | "secondary" | "warning" | "success" | "default";
+  theme?:
+    | "primary"
+    | "secondary"
+    | "warning"
+    | "success"
+    | "default"
+    | "danger";
   disabled?: boolean;
   type?: string;
   id?: any;
@@ -90,6 +101,9 @@ const themes: any = {
   },
   warning: {
     background: "#c38665"
+  },
+  danger: {
+    background: "#fc0401"
   },
   success: {
     background: "#517c4f"

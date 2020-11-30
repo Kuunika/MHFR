@@ -6,8 +6,10 @@ import {
   fetchCurrentResources,
   fetchCurrentBasic,
   fetchCurrentServices,
-  fetchCurrentUtilities
+  fetchCurrentUtilities,
+  archiveFacility
 } from "../../../services/redux/actions/facilities";
+import { fetchServiceTypes } from "../../../services/redux/actions/dependancies";
 import { setActiveFacilityPage } from "../../../services/redux/actions/ui";
 import ViewFacility from "./ViewFacility";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -23,6 +25,9 @@ import {
 import { FacilityPages as pages } from "../../../services/utils";
 import { basic } from "../../../components/organisms/FacilityForms/initialValues";
 import StatusBadge from "../../../components/atoms/StatusBadge";
+import swal from "sweetalert";
+import { toast } from "react-toastify";
+import Notification from "../../../components/atoms/Notification";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -84,6 +89,56 @@ export class index extends Component<any> {
     }
   ];
 
+  onDeleteError = () => {
+    toast.info(
+      <Notification
+        error
+        message={`Failed To Delete Facility, Please Try Again`}
+      />
+    );
+    // @ts-ignore
+    swal.close();
+  };
+
+  onDeleteSuccess = () => {
+    toast.info(<Notification message={`Facility Deleted!!!`} />);
+    this.props.history.push(`/facilities`);
+    // @ts-ignore
+    swal.close();
+  };
+
+  handleFacilityArchive = async () => {
+    let token = (await sessionStorage.getItem("token")) || "";
+    if (token == "") return;
+
+    // @ts-ignore
+    swal({
+      icon: "warning",
+      title: `Are you sure you want to archive ${this.props.facility.facility_name}?`,
+      buttons: {
+        cancel: { text: "Cancel", closeModal: true, visible: true },
+        confirm: { text: "Delete" }
+      },
+      closeOnClickOutside: false
+    }).then(async (res: any) => {
+      if (res) {
+        // @ts-ignore
+        swal({
+          icon: "info",
+          title: `Archiving Facility. Please wait...`
+        });
+        this.props
+          .archiveFacility({ id: this.state.facilityId }, token)
+          .then(() => {
+            this.onDeleteSuccess();
+          })
+          .catch(() => {
+            this.onDeleteError();
+          });
+      }
+    });
+  };
+
   downloadFacility = () => {
     window.open(`${API}/facilities/download/${this.state.facilityId}`);
   };
@@ -105,9 +160,11 @@ export class index extends Component<any> {
     this.props.setActiveFacilityPage(currentPage);
     this.setState({ facilityId });
 
+    this.props.fetchServiceTypes().then(() => {
+      this.props.fetchCurrentServices(facilityId, this.props.dependancies);
+    });
     this.props.fetchCurrentBasic(facilityId);
     this.props.fetchCurrentResources(facilityId);
-    this.props.fetchCurrentServices(facilityId, this.props.dependancies);
     this.props.fetchCurrentUtilities(facilityId);
   }
 
@@ -154,6 +211,7 @@ export class index extends Component<any> {
 
     return (
       <ViewFacility
+        archiveFacility={this.handleFacilityArchive}
         activePage={this.props.ui.activeFacilityPage}
         basic={facility}
         resources={resources}
@@ -186,6 +244,8 @@ export default connect(
     fetchCurrentBasic,
     fetchCurrentServices,
     fetchCurrentUtilities,
-    setActiveFacilityPage
+    fetchServiceTypes,
+    setActiveFacilityPage,
+    archiveFacility
   }
 )(index);

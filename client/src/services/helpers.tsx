@@ -2,11 +2,16 @@ import React from "react";
 import { MenuItem } from "@material-ui/core";
 // @ts-ignore
 import { intersection, slice, uniqWith } from "lodash";
+import store from "../services/redux/store.js";
 
 export const renderOptions = (dependancy: any, entityName: string) => {
   return dependancy.map((entity: any) => (
-    <MenuItem key={entity.id} value={entity.id}>
-      {entity[entityName]}
+    <MenuItem
+      key={entity.id}
+      value={entity.id}
+      style={{ textTransform: "capitalize" }}
+    >
+      {entity[entityName].replace("_", " ")}
     </MenuItem>
   ));
 };
@@ -66,17 +71,13 @@ export const getServicesHierachyForRedux: any = (
   serviceTypes: Array<any> = [],
   level: number = 0
 ) => {
-  console.log(services);
   allServices =
     level == 0
       ? services.map((ser: any) => {
-          const service = allServices.filter(
-            (serv: any) => serv.id == ser.service_id
-          )[0];
           return {
-            service,
+            service: ser.service,
             serviceType: serviceTypes.filter(
-              (type: any) => type.id == service.service_type_id
+              (type: any) => type.id == ser.service.service_type_id
             )[0],
             facilityService: ser
           };
@@ -172,3 +173,27 @@ export const hasFilterValuesForType = (type: string, values: Array<any>) => {
 };
 
 export const isAdmin = () => sessionStorage.getItem("token");
+
+export const getUser = () => {
+  const state: any = store ? store.getState() : null;
+
+  const user =
+    state &&
+    state.users &&
+    state.users.currentUser &&
+    state.users.currentUser.authenticated
+      ? state.users.currentUser.authDetails
+      : null;
+
+  return user ? user : { role: "public" };
+};
+
+export const OrderEntities = (
+  orderBy: string,
+  entities: Array<any>,
+  dir = "asc" as "asc" | "desc"
+) => {
+  return dir == "asc"
+    ? entities.sort((a, b) => (a[orderBy].trim() > b[orderBy].trim() ? 1 : -1))
+    : entities.sort((a, b) => (a[orderBy].trim() > b[orderBy].trim() ? -1 : 1));
+};

@@ -37,6 +37,7 @@ export default {
   postFacilityServices: "POST_FACILITY_SERVICES",
   putFacilityServices: "PUT_FACILITY_SERVICES",
   deleteFacilityServices: "DELETE_FACILITY_SERVICES",
+  archiveFacility: "ARCHIVE_FACILITY",
 
   addFilterValue: "ADD_FILTER_VALUE",
   removeFilterValue: "REMOVE_FILTER_VALUE",
@@ -59,6 +60,8 @@ export default {
   setActivePage: "SET_ACTIVE_PAGE",
   setActiveFacilityPage: "SET_ACTIVE_FACILITY_PAGE",
 
+  fetchUserRoles: "FETCH_USER_ROLES",
+
   fetchUsers: "FETCH_USERS",
   addUser: "ADD_USER",
   putUser: "PUT_USER",
@@ -66,6 +69,8 @@ export default {
   userLogin: "USER_LOGIN",
   userLogout: "USER_LOGOUT",
   fetchUserDetails: "FETCH_USER_DETAILS",
+  requestResetPassword: "REQUEST_RESET_PASSWORD",
+  resetPassword: "RESET_PASSWORD",
 
   fetchFeedbackTypes: "FETCH_FEEDBACK_TYPES",
   sendFeedback: "SEND_FEEDBACK",
