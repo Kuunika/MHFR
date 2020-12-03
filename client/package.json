@@ -26,6 +26,7 @@
     "@types/yup": "^0.26.13",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
+    "dotenv": "^8.0.0",
     "formik": "^1.5.7",
     "history": "^4.9.0",
     "lodash": "^4.17.11",
@@ -44,6 +45,7 @@
     "recharts": "^1.6.2",
     "recompose": "^0.30.0",
     "redux": "^4.0.1",
+    "redux-logger": "^3.0.6",
     "redux-promise-middleware": "^6.1.0",
     "styled-components": "^4.2.0",
     "sweetalert": "^2.1.2",
@@ -73,8 +75,6 @@
     ]
   },
   "devDependencies": {
-    "cypress": "^3.8.2",
-    "dotenv": "^8.0.0",
-    "redux-logger": "^3.0.6"
+    "cypress": "^3.8.2"
   }
 }

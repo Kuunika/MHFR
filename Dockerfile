@@ -1,4 +1,6 @@
-FROM node:10
+FROM node:10-alpine3.9
 WORKDIR /app
 COPY . .
-RUN rm -rf client
+RUN cd /app && npm i --only=prod && cd ./client/ && npm i --only=prod
+RUN apk upgrade && apk add bash
+RUN npm i -g serve
