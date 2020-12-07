@@ -41,7 +41,7 @@ const getSpecifications = () => {
 
 const processFacility = facility => {
   const data = facility.toJSON();
-  const { latitude = "", longitude = "" } = data.geolocations;
+  const { latitude, longitude } = data.geolocations || {};
   return {
     CODE: data.facility_code,
     NAME: data.facility_name,
