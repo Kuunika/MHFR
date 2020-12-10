@@ -755,13 +755,15 @@ module.exports = Facility => {
 
     }
 
-    return { ...facility, facility_code_mapping: JSON.parse(facility['facility_code_mapping']) }
+    return facility ?
+      { ...facility, facility_code_mapping: JSON.parse(facility['facility_code_mapping']) }
+      : cb(new Error('Facility not found'))
   }
 
 
   Facility.remoteMethod("findBySystem", {
     description: 'retrieve by Facility given system and code',
-    http: { path: '/findBySystem', verb: "get" },
+    http: { path: '/findBySystem', verb: "get", errorStatus: 404, status: 200 },
     accepts: [{ arg: 'system', type: 'string', required: true }, { arg: 'code', type: 'string', required: true }],
     returns: { arg: 'data', type: ['Facility'], root: true }
   });
