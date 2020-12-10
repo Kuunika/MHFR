@@ -13,6 +13,7 @@ const filterParameterArray = require("../../helpers/url-filters.helper");
 const generateConditionClause = require("../../helpers/generate-query-condition.helper");
 const urlParameter = require("../../helpers/url-parameter-mapper");
 const { locationFilterMapData } = require("../../helpers/mapData");
+const { rest } = require("lodash");
 
 const { District } = server.models;
 
@@ -745,7 +746,7 @@ module.exports = Facility => {
           if (error) {
             reject(error)
           }
-          resolve(data)
+          resolve(data[0])
         })
       })
 
@@ -754,15 +755,14 @@ module.exports = Facility => {
 
     }
 
-
-    return facility
+    return { ...facility, facility_code_mapping: JSON.parse(facility['facility_code_mapping']) }
   }
 
 
   Facility.remoteMethod("findBySystem", {
-    description: 'retrieve by system',
+    description: 'retrieve by Facility given system and code',
     http: { path: '/findBySystem', verb: "get" },
-    accepts: [{ arg: 'system', type: 'string' }, { arg: 'code', type: 'string' }],
+    accepts: [{ arg: 'system', type: 'string', required: true }, { arg: 'code', type: 'string', required: true }],
     returns: { arg: 'data', type: ['Facility'], root: true }
   });
 };
