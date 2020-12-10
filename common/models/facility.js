@@ -13,6 +13,7 @@ const filterParameterArray = require("../../helpers/url-filters.helper");
 const generateConditionClause = require("../../helpers/generate-query-condition.helper");
 const urlParameter = require("../../helpers/url-parameter-mapper");
 const { locationFilterMapData } = require("../../helpers/mapData");
+const { rest } = require("lodash");
 
 const { District } = server.models;
 
@@ -270,12 +271,12 @@ module.exports = Facility => {
     // TODO: Handle Blank Regex
     return regex
       ? formattedFacilities
-          .filter(facility => {
-            return new RegExp(`.*${regex.toUpperCase()}`).test(
-              facility.string.toUpperCase()
-            );
-          })
-          .filter((facility, index) => index < 5)
+        .filter(facility => {
+          return new RegExp(`.*${regex.toUpperCase()}`).test(
+            facility.string.toUpperCase()
+          );
+        })
+        .filter((facility, index) => index < 5)
       : formattedFacilities;
   };
 
@@ -728,5 +729,40 @@ module.exports = Facility => {
     http: { path: "/filter", verb: "get" },
     accepts: [{ arg: "filter", type: "array" }],
     returns: { arg: "response", type: "array" }
+  });
+
+
+
+  Facility.findBySystem = async (system, code, cb) => {
+
+    let facility;
+    const query = `SELECT * FROM Facility
+                   WHERE  JSON_CONTAINS(LOWER(facility_code_mapping),
+                          LOWER('{"system":"${system.replace(/['"]/g, '')}", "code":"${code.replace(/['"]/g, '')}"}'))`
+
+    try {
+      facility = await new Promise((resolve, reject) => {
+        Facility.dataSource.connector.query(query, (error, data) => {
+          if (error) {
+            reject(error)
+          }
+          resolve(data[0])
+        })
+      })
+
+    } catch (error) {
+      cb(error)
+
+    }
+
+    return { ...facility, facility_code_mapping: JSON.parse(facility['facility_code_mapping']) }
+  }
+
+
+  Facility.remoteMethod("findBySystem", {
+    description: 'retrieve by Facility given system and code',
+    http: { path: '/findBySystem', verb: "get" },
+    accepts: [{ arg: 'system', type: 'string', required: true }, { arg: 'code', type: 'string', required: true }],
+    returns: { arg: 'data', type: ['Facility'], root: true }
   });
 };
