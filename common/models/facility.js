@@ -270,12 +270,12 @@ module.exports = Facility => {
     // TODO: Handle Blank Regex
     return regex
       ? formattedFacilities
-          .filter(facility => {
-            return new RegExp(`.*${regex.toUpperCase()}`).test(
-              facility.string.toUpperCase()
-            );
-          })
-          .filter((facility, index) => index < 5)
+        .filter(facility => {
+          return new RegExp(`.*${regex.toUpperCase()}`).test(
+            facility.string.toUpperCase()
+          );
+        })
+        .filter((facility, index) => index < 5)
       : formattedFacilities;
   };
 
@@ -728,5 +728,41 @@ module.exports = Facility => {
     http: { path: "/filter", verb: "get" },
     accepts: [{ arg: "filter", type: "array" }],
     returns: { arg: "response", type: "array" }
+  });
+
+
+
+  Facility.findBySystem = async (system, code, cb) => {
+
+    let facility;
+    const query = `SELECT * FROM Facility
+                   WHERE  JSON_CONTAINS(LOWER(facility_code_mapping),
+                          LOWER('{"system":"${system.replace(/['"]/g, '')}", "code":"${code.replace(/['"]/g, '')}"}'))`
+
+    try {
+      facility = await new Promise((resolve, reject) => {
+        Facility.dataSource.connector.query(query, (error, data) => {
+          if (error) {
+            reject(error)
+          }
+          resolve(data)
+        })
+      })
+
+    } catch (error) {
+      cb(error)
+
+    }
+
+
+    return facility
+  }
+
+
+  Facility.remoteMethod("findBySystem", {
+    description: 'retrieve by system',
+    http: { path: '/findBySystem', verb: "get" },
+    accepts: [{ arg: 'system', type: 'string' }, { arg: 'code', type: 'string' }],
+    returns: { arg: 'data', type: ['Facility'], root: true }
   });
 };
