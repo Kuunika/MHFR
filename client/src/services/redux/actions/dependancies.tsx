@@ -13,6 +13,28 @@ import {
   getFacilityTypes,
   getUserRoles
 } from "../../api";
+import axios from "axios";
+
+const API = process.env.REACT_APP_API_URL;
+
+export const fetchDependancies = () => {
+  const uris = [
+    axios.get(`${API}/Utilities`),
+    axios.get(`${API}/UtilityTypes`),
+    axios.get(`${API}/Services`),
+    axios.get(`${API}/ServiceTypes`),
+    axios.get(`${API}/Resources`),
+    axios.get(`${API}/ResourceTypes`),
+    axios.get(`${API}/RegulatoryStatuses`),
+    axios.get(`${API}/Districts`),
+    axios.get(`${API}/OperationalStatuses`),
+    axios.get(`${API}/FacilityTypes`)
+  ];
+  return {
+    type: "FETCH_DEPENDANCIES",
+    payload: axios.all(uris)
+  };
+};
 
 export const fetchUtilities = () => {
   return {

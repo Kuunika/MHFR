@@ -75,5 +75,6 @@ export default {
   fetchFeedbackTypes: "FETCH_FEEDBACK_TYPES",
   sendFeedback: "SEND_FEEDBACK",
 
+  fetchDependancies: "FETCH_DEPENDANCIES",
   dependacyError: "DEPENDANCY_ERROR"
 };

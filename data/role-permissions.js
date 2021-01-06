@@ -39,7 +39,6 @@ const customCheck = (loggedUserId, userUrlId, role) => {
   if (role === roles.ADMIN) {
     return true;
   }
-
   return loggedUserId === userUrlId;
 };
 
@@ -58,7 +57,7 @@ const rolePermissions = [
           { method: "filter", permissions: [operations.READ] },
           { method: "download", permissions: [operations.READ] },
           { method: "findByCode", permissions: [operations.READ] },
-          { method: "findBySystem", permissions: [operations.READ] },
+          { method: "findBySystem", permissions: [operations.READ] }
         ]
       },
       {

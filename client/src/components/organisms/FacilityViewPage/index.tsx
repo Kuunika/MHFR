@@ -3,12 +3,7 @@ import { Grid } from "@material-ui/core";
 import Title from "../../molecules/PageTitle";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHospital,
-  faEdit,
-  faPlusCircle,
-  faTrash
-} from "@fortawesome/free-solid-svg-icons";
+import { faHospital, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Container from "../../atoms/Container";
 import OptionsBar from "../../molecules/FacilityViewOptionsBar";
 import Card from "../../atoms/Card";

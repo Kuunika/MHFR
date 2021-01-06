@@ -20,7 +20,7 @@ import Preloader from "../components/atoms/Preloader";
 import ErrorScreen from "../scenes/Error/500";
 import ForgotPassword from "../scenes/Users/PasswordReset/ForgotPassword.container";
 import ResetPassword from "../scenes/Users/PasswordReset/ResetPassword.container";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import {
   fetchUtilities,
   fetchUtilityTypes,
@@ -32,7 +32,8 @@ import {
   fetchDistricts,
   fetchOperationalStatuses,
   dispatchDependancyError,
-  fetchFacilityTypes
+  fetchFacilityTypes,
+  fetchDependancies
 } from "../services/redux/actions/dependancies";
 import { fetchUserDetails } from "../services/redux/actions/users";
 import { fetchFacilities } from "../services/redux/actions/facilities";
@@ -62,48 +63,11 @@ const App: React.FC = (props: any) => {
     fetchFacilityTypes
   } = props;
 
+  const dispatch = useDispatch();
   useEffect(() => {
-    fetchUtilities().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchUtilityTypes().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchServiceTypes().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchServices().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchResources().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchResourceTypes().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchRegulatoryStatuses().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchOperationalStatuses().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchDistricts().catch(() => {
-      dispatchDependancyError();
-    });
+    dispatch(fetchDependancies());
 
     fetchFacilities().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchFacilityTypes().catch(() => {
       dispatchDependancyError();
     });
 
@@ -192,21 +156,18 @@ const mapStateToProps = (state: any) => ({
   error: state.errors.dependancyError,
   facilities: state.facilities.list
 });
-export default connect(
-  mapStateToProps,
-  {
-    fetchUtilities,
-    fetchUtilityTypes,
-    fetchServiceTypes,
-    fetchServices,
-    fetchResources,
-    fetchResourceTypes,
-    fetchRegulatoryStatuses,
-    fetchDistricts,
-    fetchOperationalStatuses,
-    dispatchDependancyError,
-    fetchFacilities,
-    fetchFacilityTypes,
-    fetchUserDetails
-  }
-)(App);
+export default connect(mapStateToProps, {
+  fetchUtilities,
+  fetchUtilityTypes,
+  fetchServiceTypes,
+  fetchServices,
+  fetchResources,
+  fetchResourceTypes,
+  fetchRegulatoryStatuses,
+  fetchDistricts,
+  fetchOperationalStatuses,
+  dispatchDependancyError,
+  fetchFacilities,
+  fetchFacilityTypes,
+  fetchUserDetails
+})(App);

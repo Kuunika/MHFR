@@ -4,25 +4,18 @@ import { MenuItem } from "@material-ui/core";
 import { intersection, slice, uniqWith } from "lodash";
 import store from "../services/redux/store.js";
 
-export const renderOptions = (dependancy: any, entityName: string) => {
+export const renderOptions = (
+  dependancy: any,
+  entityName: string,
+  withObject = false
+) => {
   return dependancy.map((entity: any) => (
     <MenuItem
       key={entity.id}
-      value={entity.id}
+      value={withObject ? entity : entity.id}
       style={{ textTransform: "capitalize" }}
     >
       {entity[entityName].replace("_", " ")}
-    </MenuItem>
-  ));
-};
-
-export const renderOptionsWithObject = (
-  dependancy: any,
-  entityName: string
-) => {
-  return dependancy.map((entity: any) => (
-    <MenuItem key={entity.id} value={entity}>
-      {entity[entityName]}
     </MenuItem>
   ));
 };
