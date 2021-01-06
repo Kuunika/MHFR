@@ -232,6 +232,17 @@ export const basicAdvancedFilter = (filterValues: Array<any>) => {
       return { facility_owner_id: opt.id };
     });
 
+  const rangeFilter = filterValues
+    .filter(filter => filter.type == "lastUpdatedRange")
+    .map(opt => {
+      return {
+        and: [
+          { updated_at: { gte: new Date(opt.range[0]) } },
+          { updated_at: { lt: new Date(opt.range[1]) } }
+        ]
+      };
+    });
+
   const FILTER = {
     where: {
       and: [
@@ -239,7 +250,8 @@ export const basicAdvancedFilter = (filterValues: Array<any>) => {
         { or: facilityTypeFilterOpt },
         { or: regulatoryStatusFilterOpt },
         { or: operationalStatusFilterOpt },
-        { or: ownerFilterOpt }
+        { or: ownerFilterOpt },
+        { or: rangeFilter }
       ]
     }
   };

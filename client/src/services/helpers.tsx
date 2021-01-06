@@ -163,7 +163,8 @@ export const hasFilterValuesForType = (type: string, values: Array<any>) => {
             val.type === "facilityTypes" ||
             val.type === "regulatoryStatuses" ||
             val.type === "operationalStatuses" ||
-            val.type === "facilityOwners"
+            val.type === "facilityOwners" ||
+            val.type === "lastUpdatedRange"
         ).length > 0
       );
 
