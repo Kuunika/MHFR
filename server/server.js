@@ -6,6 +6,8 @@ var boot = require("loopback-boot");
 
 var app = (module.exports = loopback());
 
+const facilitiesJob = require('./jobs/unregistered-facilities-mailer.job');
+
 app.use(json2xls.middleware);
 
 app.start = function() {
@@ -18,6 +20,8 @@ app.start = function() {
       var explorerPath = app.get("loopback-component-explorer").mountPath;
       console.log("Browse your REST API at %s%s", baseUrl, explorerPath);
     }
+
+    facilitiesJob.begin(app.models);
   });
 };
 
