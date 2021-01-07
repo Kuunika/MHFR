@@ -17,6 +17,8 @@ import axios from "axios";
 
 const API = process.env.REACT_APP_API_URL;
 
+// TODO: remove unused functions
+
 export const fetchDependancies = () => {
   const uris = [
     axios.get(`${API}/Utilities`),
@@ -28,7 +30,9 @@ export const fetchDependancies = () => {
     axios.get(`${API}/RegulatoryStatuses`),
     axios.get(`${API}/Districts`),
     axios.get(`${API}/OperationalStatuses`),
-    axios.get(`${API}/FacilityTypes`)
+    axios.get(`${API}/FacilityTypes`),
+    axios.get(`${API}/owners`),
+    axios.get(`${API}/FeedbackTypes`)
   ];
   return {
     type: "FETCH_DEPENDANCIES",

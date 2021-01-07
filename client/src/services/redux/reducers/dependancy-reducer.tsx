@@ -31,6 +31,9 @@ const initialState = {
   facilityTypes: {
     list: [] as Array<any>
   },
+  feedbackTypes: {
+    list: [] as Array<any>
+  },
   roles: {
     list: [] as Array<any>
   }
@@ -69,6 +72,12 @@ export default (
         },
         facilityTypes: {
           list: apiAdaptor.getFacilityTypes(action.payload[9].data)
+        },
+        owners: {
+          list: apiAdaptor.getOwners(action.payload[10].data)
+        },
+        feedbackTypes: {
+          list: action.payload[11].data
         }
       };
     case actions.fetchUserRoles + "_FULFILLED":
