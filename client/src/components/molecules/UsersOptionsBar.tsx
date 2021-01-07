@@ -7,7 +7,7 @@ import Card from "../atoms/Card";
 import SortField from "../atoms/UsersSortField";
 import SearchField from "../atoms/UsersSearch";
 import UpdateMyDetails from "../../scenes/Users/UpdateMyDetails";
-import { isAdmin } from "../../services/helpers";
+import { isLoggedIn } from "../../services/helpers";
 
 function UsersToolbar(props: Props) {
   const { onFilter, onSort } = props;
@@ -18,7 +18,7 @@ function UsersToolbar(props: Props) {
           <SortField onSort={onSort} />
           <SearchField onFilter={onFilter} />
         </div>
-        <div>{isAdmin() && <UpdateMyDetails />}</div>
+        <div>{isLoggedIn() && <UpdateMyDetails />}</div>
       </Container>
     </Card>
   );

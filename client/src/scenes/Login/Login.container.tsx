@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { LoginSchema } from "./Login.schema";
 import { Formik } from "formik";
 import LoginView from "./Login.view";
-import { isAdmin } from "../../services/helpers";
 
 function LoginContainer(props: Props) {
   const { userLogin, fetchUserDetails, setActivePage, auth, history } = props;

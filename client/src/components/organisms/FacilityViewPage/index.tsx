@@ -17,7 +17,7 @@ import styled from "styled-components";
 import { FacilityPages } from "../../../services/utils";
 import Button from "../../atoms/Button";
 import { Link } from "react-router-dom";
-import { isAdmin, getUser } from "../../../services/helpers";
+import { isLoggedIn, getUser } from "../../../services/helpers";
 import EmptyState from "../../atoms/FacilityDetailsEmptyState";
 import Ac from "../../atoms/Ac";
 import { acActions } from "../../../acl";
@@ -100,7 +100,7 @@ function index(props: Props) {
                     heading={
                       <CardTitle>
                         <div>{pageHeader}</div>
-                        {isAdmin() && (
+                        {isLoggedIn() && (
                           <>
                             <Ac
                               role={getUser().role}

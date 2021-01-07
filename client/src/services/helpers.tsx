@@ -166,7 +166,7 @@ export const hasFilterValuesForType = (type: string, values: Array<any>) => {
   }
 };
 
-export const isAdmin = () => sessionStorage.getItem("token");
+export const isLoggedIn = () => sessionStorage.getItem("token");
 
 export const getUser = () => {
   const state: any = store ? store.getState() : null;
