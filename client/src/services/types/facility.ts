@@ -41,34 +41,34 @@ export type IServiceCurrent = {
 };
 
 export type IFacilityCurrent = {
-  facility_code: string;
-  facility_code_dhis2: string;
-  facility_code_openlmis: string;
-  registration_number: string;
-  facility_name: string;
-  common_name: string;
-  facility_date_opened: string;
-  facility_type_id: number;
-  facility_owner_id: number;
-  facility_operational_status_id: number;
-  facility_regulatory_status_id: number;
-  district_id: number;
-  client_id: number;
-  archived_date: string;
-  published_date: string;
-  created_at: string;
-  updated_at: string;
-  id: number;
-  facility_code_mapping: Array<{
+  facility_code?: string;
+  facility_code_dhis2?: string;
+  facility_code_openlmis?: string;
+  registration_number?: string;
+  facility_name?: string;
+  common_name?: string;
+  facility_date_opened?: string;
+  facility_type_id?: number;
+  facility_owner_id?: number;
+  facility_operational_status_id?: number;
+  facility_regulatory_status_id?: number;
+  district_id?: number;
+  client_id?: number;
+  archived_date?: string;
+  published_date?: string;
+  created_at?: string;
+  updated_at?: string;
+  id?: number;
+  facility_code_mapping?: Array<{
     url: string;
     code: string;
     system: string;
   }>;
-  owner: IOwner;
-  facilityType: IFacilityType;
-  operationalStatus: IOperationalStatus;
-  regulatoryStatus: IRegulatoryStatus;
-  contactPeople: {
+  owner?: IOwner;
+  facilityType?: IFacilityType;
+  operationalStatus?: IOperationalStatus;
+  regulatoryStatus?: IRegulatoryStatus;
+  contactPeople?: {
     contact_person_fullname: string;
     contact_person_phone: string;
     contact_person_email: string;
@@ -79,7 +79,7 @@ export type IFacilityCurrent = {
     updated_at: string;
     id: number;
   };
-  addresses: {
+  addresses?: {
     physical_address: string;
     postal_address: string;
     village: string;
@@ -88,14 +88,14 @@ export type IFacilityCurrent = {
     client_id: number | null;
     id: number;
   };
-  locations: {
+  locations?: {
     catchment_area: string;
     catchment_population: number;
     facility_id: number;
     client_id: number;
     id: number;
   };
-  geolocations: {
+  geolocations?: {
     datum: string;
     longitude: string;
     latitude: string;
@@ -133,7 +133,11 @@ export type IFilterTypes =
   | "regulatoryStatuses"
   | "operationalStatuses"
   | "facilityOwners"
-  | "lastUpdatedRange";
+  | "lastUpdatedRange"
+  | "resources"
+  | "utilities"
+  | "services";
+
 export type IFilterValues = {
   type: IFilterTypes;
   id: number;
@@ -152,6 +156,6 @@ export type IFacilities = {
   list: Array<IFacility>;
   filteredList: Array<IFacility>;
   current: IFacilityCurrent;
-  advencedFilter: IAdvancedFilter;
+  advancedFilter: IAdvancedFilter;
   quickSearchValue: string;
 };

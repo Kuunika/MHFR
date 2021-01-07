@@ -1,6 +1,7 @@
 // @ts-ignore
 import { join, split, camelCase } from "lodash";
-export default (state = {}, action: any) => {
+import { IStatuses } from "../../types";
+export default (state = {} as IStatuses, action: any) => {
   let actionGroup = join(
     split(action.type, "_", split(action.type, "_").length - 1),
     "_"

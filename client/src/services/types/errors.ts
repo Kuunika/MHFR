@@ -1,5 +1,5 @@
 export type IErrors = {
-  dependacyError: boolean;
+  dependancyError: boolean;
 
   fetchUtilities?: Array<string>;
   fetchUtilityTypes?: Array<string>;

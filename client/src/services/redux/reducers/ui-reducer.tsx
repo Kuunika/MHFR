@@ -1,3 +1,4 @@
+import { IUI } from "../../types";
 import actions from "../actions/actions";
 
 const initialState = {
@@ -5,7 +6,7 @@ const initialState = {
   searchOpen: false,
   activePage: "Home",
   activeFacilityPage: "summary"
-};
+} as IUI;
 export default (
   state = initialState,
   action: { type: string; payload?: any }

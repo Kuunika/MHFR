@@ -2,15 +2,21 @@ import actions from "../actions/actions";
 import { getServicesHierachyForRedux } from "../../helpers";
 // @ts-ignore
 import { isEqual, uniqWith } from "lodash";
+import {
+  IAdvancedFilter,
+  IFacilities,
+  IFacility,
+  IFacilityCurrent
+} from "../../types";
 
 const initialState = {
-  list: [],
-  filteredList: [],
+  list: [] as Array<IFacility>,
+  filteredList: [] as Array<IFacility>,
   current: {
-    resources: [],
-    services: [],
-    utilities: []
-  },
+    resources: [] as any,
+    services: [] as any,
+    utilities: [] as any
+  } as IFacilityCurrent,
   advancedFilter: {
     filterValues: [],
     filterResults: {
@@ -19,9 +25,10 @@ const initialState = {
       utilities: [],
       services: []
     }
-  } as { filterValues: Array<any>; filterResults: any },
-  quickSearchValue: "" as any
-};
+  } as IAdvancedFilter,
+  quickSearchValue: ""
+} as IFacilities;
+
 export default (
   state = initialState,
   action: { type: string; payload?: any; meta: any }

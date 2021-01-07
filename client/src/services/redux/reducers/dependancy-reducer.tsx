@@ -1,43 +1,61 @@
 import actions from "../actions/actions";
 import { getServicesHierachy } from "../../helpers";
 import apiAdaptor from "../../apiAdaptor";
+import {
+  IDependancies,
+  IDistrict,
+  IFacilityType,
+  IFeedbackType,
+  IOperationalStatus,
+  IOwner,
+  IRegulatoryStatus,
+  IResource,
+  IResourceType,
+  IRole,
+  IService,
+  IServiceHierachy,
+  IServiceType,
+  IUtility,
+  IUtilityType
+} from "../../types";
 
 const initialState = {
   utilities: {
-    list: [] as Array<any>,
-    types: [] as Array<any>
+    list: [] as Array<IUtility>,
+    types: [] as Array<IUtilityType>
   },
   services: {
-    list: [] as Array<any>,
-    hierachy: [] as Array<any>,
-    types: [] as Array<any>
+    list: [] as Array<IService>,
+    hierachy: [] as Array<IServiceHierachy>,
+    types: [] as Array<IServiceType>
   },
   resources: {
-    list: [] as Array<any>,
-    types: [] as Array<any>
+    list: [] as Array<IResource>,
+    types: [] as Array<IResourceType>
   },
   regulatoryStatuses: {
-    list: [] as Array<any>
+    list: [] as Array<IRegulatoryStatus>
   },
   operationalStatuses: {
-    list: [] as Array<any>
+    list: [] as Array<IOperationalStatus>
   },
   districts: {
-    list: [] as Array<any>
+    list: [] as Array<IDistrict>
   },
   owners: {
-    list: [] as Array<any>
+    list: [] as Array<IOwner>
   },
   facilityTypes: {
-    list: [] as Array<any>
+    list: [] as Array<IFacilityType>
   },
   feedbackTypes: {
-    list: [] as Array<any>
+    list: [] as Array<IFeedbackType>
   },
   roles: {
-    list: [] as Array<any>
+    list: [] as Array<IRole>
   }
-};
+} as IDependancies;
+
 export default (
   state = initialState,
   action: { type: string; payload?: any }

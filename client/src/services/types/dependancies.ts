@@ -81,6 +81,11 @@ export type IRole = {
   description: string;
 };
 
+export type IFeedbackType = {
+  feedback_type: string;
+  description: string;
+  id: number;
+};
 export type IDependancies = {
   utilities: {
     list: Array<IUtility>;
@@ -98,18 +103,14 @@ export type IDependancies = {
   regulatoryStatuses: {
     list: Array<IRegulatoryStatus>;
   };
-  operationStatuses: {
+  operationalStatuses: {
     list: Array<IOperationalStatus>;
   };
   facilityTypes: {
     list: Array<IFacilityType>;
   };
   feedbackTypes: {
-    list: Array<{
-      feedback_type: string;
-      description: string;
-      id: number;
-    }>;
+    list: Array<IFeedbackType>;
   };
   owners: {
     list: Array<IOwner>;
