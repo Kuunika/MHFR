@@ -13,9 +13,10 @@ const filterParameterArray = require("../../helpers/url-filters.helper");
 const generateConditionClause = require("../../helpers/generate-query-condition.helper");
 const urlParameter = require("../../helpers/url-parameter-mapper");
 const { locationFilterMapData } = require("../../helpers/mapData");
-const { rest } = require("lodash");
 
-const { District } = server.models;
+const FacilityService = require('../../server/services/facilities.service');
+const MailService = require('../../server/services/mail.service');
+const facilityNotRegisteredTemplate = require("../../server/templates/emails/facility-not-registered.template");
 
 const getDistrictsIDs = async (data = null) => {
   if (data && data != []) {
@@ -34,6 +35,9 @@ module.exports = Facility => {
   // Facility.validatesUniquenessOf('facility_code');
   // Facility.validatesUniquenessOf('facility_code_dhis2');
   // Facility.validatesUniquenessOf('facility_code_openlmis');
+
+  // after save hook is getting called too many times
+  const handleOnce = once(handleRegulatoryStatusChange);
 
   Facility.observe("after save", async function generateFacilityCode(ctx) {
     if (ctx.instance) {
@@ -56,8 +60,37 @@ module.exports = Facility => {
           );
         });
       }
+      handleOnce(ctx.instance);
     }
   });
+
+  /**
+   * @param {object} facility
+   * @returns {undefined}
+   */
+  async function handleRegulatoryStatusChange(facility) {
+    const service = new FacilityService(server.models);
+    if (!(await service.isRegistered(facility))) {
+      const mail = {
+        contactName: 'Sir/Madam',
+        facilities: [{ id: facility.id, name: facility.facility_name }]
+      };
+      MailService.send(facilityNotRegisteredTemplate(mail));
+    }
+  }
+
+  /**
+   * @param {Function} callback
+   * @returns {undefined}
+   */
+  function once(callback) {
+    let called = false;
+    return async args => {
+      if(called) return;
+      await callback(args);
+      called = true;
+    }
+  }
 
   // TODO: Do the same thing for archived client
   Facility.observe("access", async function filterArchivedAndUnpublished(ctx) {
