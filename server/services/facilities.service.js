@@ -21,4 +21,13 @@ module.exports = class {
       }
     );
   }
+
+  /**
+   * @param {object} facility
+   * @returns {Promise<boolean>}
+   */
+  async isRegistered(facility) {
+    const registered = await this.models.RegulatoryStatus.findOne({ where: { name: 'Registered' } });
+    return facility.regulatory_status_id === registered.id;
+  }
 }
