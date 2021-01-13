@@ -20,8 +20,7 @@ app.start = function() {
       var explorerPath = app.get("loopback-component-explorer").mountPath;
       console.log("Browse your REST API at %s%s", baseUrl, explorerPath);
     }
-
-    facilitiesJob.begin(app.models);
+    require('./jobs')(app).init();
   });
 };
 
