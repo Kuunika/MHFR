@@ -13,12 +13,8 @@ const MAILER_CONFIG = {
 
 module.exports = class {
   static async send(payload) {
-    try {
-      const transport = NodeMailer.createTransport(MAILER_CONFIG);
-      const response = await transport.sendMail(payload);
-      return response.messageId ? true : false;
-    } catch (e) {
-      console.log(e.message);
-    }
+    const transport = NodeMailer.createTransport(MAILER_CONFIG);
+    const response = await transport.sendMail(payload);
+    return response.messageId ? true : false;
   }
 }
