@@ -48,6 +48,8 @@ module.exports = function () {
       );
 
 
+
+
       if (checkPermission("all", model, method, req, userInstance.id, userRoles)) {
         return next();
       }
@@ -111,10 +113,13 @@ const checkPermission = (role, model, method, req, loggedUserId = 0, userRoles =
     rolePermissions => rolePermissions.role === role
   );
 
+
+
   if (!rolePermission) {
     return false;
   }
   const roleModel = rolePermission.acls.find(acl => acl.model === model);
+
 
   if (!roleModel) {
     return false;
@@ -155,7 +160,7 @@ const checkPermission = (role, model, method, req, loggedUserId = 0, userRoles =
     ];
   }
 
-
+  console.log(roleMethod)
 
   return roleMethod.permissions.find(permission => permission === req.method);
 };

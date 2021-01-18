@@ -59,6 +59,7 @@ const rolePermissions = [
           { method: "download", permissions: [operations.READ] },
           { method: "findByCode", permissions: [operations.READ] },
           { method: "findBySystem", permissions: [operations.READ] },
+          { method: "contactdetails", permissions: [operations.READ] },
         ]
       },
       {
@@ -187,7 +188,7 @@ const rolePermissions = [
         methods: [
           {
             method: "*",
-            permittedUpdateFields: [facility.FACILITY_TYPE],
+            permittedUpdateFields: [facility.ALL_FIELDS],
             permissions: [
               operations.DELETE,
               operations.READ,
@@ -197,7 +198,11 @@ const rolePermissions = [
           },
           {
             method: "updateContactDetails",
-            permissions: [operations.WRITE]
+            permissions: [
+              operations.DELETE,
+              operations.READ,
+              operations.UPDATE,
+              operations.WRITE]
           },
           {
             method: "services",
@@ -233,7 +238,7 @@ const rolePermissions = [
         ]
       },
       {
-        model: "facilityResources",
+        model: "facilityresources",
         methods: [
           {
             method: "*",
@@ -241,13 +246,13 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permissions: [operations.UPDATE, operations.WRITE]
           }
         ]
       },
 
       {
-        model: "facilityServices",
+        model: "facilityservices",
         methods: [
           {
             method: "*",
@@ -255,7 +260,20 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permissions: [operations.WRITE, operations.UPDATE]
+          }
+        ]
+      },
+      {
+        model: "facilityutilities",
+        methods: [
+          {
+            method: "*",
+            permissions: [operations.READ, operations.UPDATE, operations.WRITE]
+          },
+          {
+            method: "replaceOrCreate",
+            permissions: [operations.UPDATE, operations.WRITE]
           }
         ]
       },
@@ -342,6 +360,14 @@ const rolePermissions = [
               operations.WRITE
             ]
           },
+          {
+            method: "updateContactDetails",
+            permissions: [
+              operations.DELETE,
+              operations.READ,
+              operations.UPDATE,
+              operations.WRITE]
+          },
 
           {
             method: "services",
@@ -382,7 +408,7 @@ const rolePermissions = [
         ]
       },
       {
-        model: "facilityServices",
+        model: "facilityservices",
         methods: [
           {
             method: "*",
@@ -395,7 +421,7 @@ const rolePermissions = [
         ]
       },
       {
-        model: "facilityResources",
+        model: "facilityresources",
         methods: [
           {
             method: "*",
@@ -408,7 +434,7 @@ const rolePermissions = [
         ]
       },
       {
-        model: "facilityUtilities",
+        model: "facilityutilities",
         methods: [
           {
             method: "*",
@@ -482,7 +508,7 @@ const rolePermissions = [
         ]
       },
       {
-        model: "facilityUtilities",
+        model: "facilityresources",
         methods: [
           {
             method: "*",
@@ -515,9 +541,56 @@ const rolePermissions = [
             method: "*",
             permittedUpdateFields: [facility.ALL_FIELDS],
             permissions: [operations.UPDATE, operations.PATCH]
+          },
+          {
+            method: "updateContactDetails",
+            permissions: [
+              operations.DELETE,
+              operations.READ,
+              operations.UPDATE,
+              operations.WRITE]
+          },
+        ]
+      },
+      {
+        model: "facilityresources",
+        methods: [
+          {
+            method: "*",
+            permissions: [operations.READ, operations.UPDATE, operations.WRITE]
+          },
+          {
+            method: "replaceOrCreate",
+            permission: [operations.WRITE]
           }
         ]
-      }
+      },
+      {
+        model: "facilityutilities",
+        methods: [
+          {
+            method: "*",
+            permissions: [operations.READ, operations.UPDATE, operations.WRITE]
+          },
+          {
+            method: "replaceOrCreate",
+            permission: [operations.WRITE]
+          }
+        ]
+      },
+      {
+        model: "facilityservices",
+        methods: [
+          {
+            method: "*",
+            permissions: [operations.READ, operations.UPDATE, operations.WRITE]
+          },
+          {
+            method: "replaceOrCreate",
+            permission: [operations.WRITE]
+          }
+        ]
+      },
     ]
   },
   {
@@ -528,7 +601,7 @@ const rolePermissions = [
         methods: [
           {
             method: "*",
-            permittedUpdateFields: [facility.FACILITY_TYPE],
+            permittedUpdateFields: [facility.ALL_FIELDS],
             permissions: [
               operations.DELETE,
               operations.READ,
@@ -544,6 +617,14 @@ const rolePermissions = [
               operations.UPDATE,
               operations.WRITE
             ]
+          },
+          {
+            method: "updateContactDetails",
+            permissions: [
+              operations.DELETE,
+              operations.READ,
+              operations.UPDATE,
+              operations.WRITE]
           },
           {
             method: "utilities",
@@ -567,7 +648,7 @@ const rolePermissions = [
         ]
       },
       {
-        model: "facilityResources",
+        model: "facilityresources",
         methods: [
           {
             method: "*",
@@ -580,7 +661,7 @@ const rolePermissions = [
         ]
       },
       {
-        model: "facilityServices",
+        model: "facilityservices",
         methods: [
           {
             method: "*",
@@ -594,7 +675,7 @@ const rolePermissions = [
       },
 
       {
-        model: "facilityUtilities",
+        model: "facilityutilities",
         methods: [
           {
             method: "*",
