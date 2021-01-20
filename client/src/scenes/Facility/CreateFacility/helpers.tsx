@@ -51,7 +51,11 @@ export const getBasicDetails = (data: any) => ({
   updated_at: Date.now()
 });
 
-export const getContactDetails = (data: any, facilityId: number) => ({
+export const getContactDetails = (
+  data: any,
+  facilityId: number,
+  update = false
+) => ({
   data: {
     physicalAddress: data.physical_address,
     postalAddress: data.postal_address,

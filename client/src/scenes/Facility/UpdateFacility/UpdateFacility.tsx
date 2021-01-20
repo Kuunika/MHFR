@@ -105,7 +105,7 @@ function UpdateFacility(props: Props) {
                         dependancies={dependancies}
                       />
                     )} */}
-                    {activePage == pages.resources && (
+                    {/* {activePage == pages.resources && (
                       <ResourceDetails
                         onCancel={onCancel}
                         initialValues={resources(
@@ -117,7 +117,7 @@ function UpdateFacility(props: Props) {
                         networkError={[]}
                         dependancies={dependancies}
                       />
-                    )}
+                    )} */}
                     {activePage == pages.utilities && (
                       <UtilitiesForm
                         onCancel={onCancel}

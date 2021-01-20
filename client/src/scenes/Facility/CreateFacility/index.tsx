@@ -12,6 +12,7 @@ import Unauthorized from "../../Error/401";
 import Stepper from "../../../components/molecules/AddFacilityStepper";
 import BasicDetails from "../../../components/organisms/FacilityForms/BasicDetails";
 import ContactDetails from "../../../components/organisms/FacilityForms/ContactDetails";
+import Resources from "../../../components/organisms/FacilityForms/Resources";
 
 export type IForms =
   | "Basic Details"
@@ -81,6 +82,14 @@ function CreateFacility() {
                     onSubmitDetails(facility, "Resources")
                   }
                 ></ContactDetails>
+              )}
+              {state.activeForm == formSections[2] && (
+                <Resources
+                  facility={state.facility}
+                  onCreateOrUpdate={(facility: any) =>
+                    onSubmitDetails(facility, "Utilities")
+                  }
+                ></Resources>
               )}
             </Container>
           </div>

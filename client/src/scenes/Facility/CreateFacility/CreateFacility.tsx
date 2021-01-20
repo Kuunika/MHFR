@@ -73,7 +73,7 @@ function CreateFacility(props: Props) {
               fromAdd
             />
           )} */}
-          {active == sections[2] && (
+          {/* {active == sections[2] && (
             <ResourceDetails
               initialValues={resources(dependancies.resources.list)}
               schema={getResourcesSchema(dependancies.resources.list)}
@@ -83,7 +83,7 @@ function CreateFacility(props: Props) {
               onCancel={onCancel}
               fromAdd
             />
-          )}
+          )} */}
           {active == sections[3] && (
             <UtilityDetails
               initialValues={utilities()}
