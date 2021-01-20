@@ -1,5 +1,7 @@
 "use strict";
 
+const { object } = require("joi");
+
 // corresponds to request methods
 const operations = {
   WRITE: "POST",
@@ -32,7 +34,22 @@ const facility = {
   ALL_FIELDS: "all",
   REGULATORY_STATUS: "facility_regulatory_status_id",
   REGISTRATION_NUMBER: "registration_number",
-  FACILITY_TYPE: "facility_type_id"
+  FACILITY_TYPE: "facility_type_id",
+  FACILITY_CODE: "facility_code",
+  FACILITY_CODE_DHIS2: "facility_code_dhis2",
+  FACILITY_CODE_OPENLMIS: "facility_code_openlmis",
+  REGISTRATION_NUMBER: "registration_number",
+  FACILITY_NAME: "facility_name",
+  COMMON_NAME: "common_name",
+  FACILITY_DATE_OPENED: "facility_date_opened",
+  FACILITY_TYPE_OWNER: "facility_owner_id",
+  FACILITY_OPERATIONAL_STATUS: "facility_operational_status_id",
+  FACILITY_REGULATORY_STATUS: "facility_regulatory_status_id",
+  DISTRICT: "district_id",
+  CLIENT: "client_id",
+  ARCHIVED_DATE: "archived_date",
+  PUBLISHED_DATE: "published_date",
+
 };
 
 const customCheck = (loggedUserId, userUrlId, role) => {
@@ -42,6 +59,11 @@ const customCheck = (loggedUserId, userUrlId, role) => {
 
   return loggedUserId === userUrlId;
 };
+
+const allExcept = (except, all) => {
+  return all.filter(prop => !except.includes(prop))
+}
+
 
 const rolePermissions = [
   {
@@ -353,6 +375,11 @@ const rolePermissions = [
         methods: [
           {
             method: "*",
+            permittedUpdateFields: allExcept(
+              [facility.REGULATORY_STATUS,
+              facility.REGISTRATION_NUMBER,
+              facility.FACILITY_TYPE, facility.ALL_FIELDS],
+              Object.values(facility)),
             permissions: [
               operations.DELETE,
               operations.READ,
@@ -539,7 +566,12 @@ const rolePermissions = [
         methods: [
           {
             method: "*",
-            permittedUpdateFields: [facility.ALL_FIELDS],
+            permittedUpdateFields: allExcept(
+              [facility.REGULATORY_STATUS,
+              facility.REGISTRATION_NUMBER,
+              facility.FACILITY_TYPE, facility.ALL_FIELDS],
+              Object.values(facility)
+            ),
             permissions: [operations.UPDATE, operations.PATCH]
           },
           {
@@ -601,7 +633,11 @@ const rolePermissions = [
         methods: [
           {
             method: "*",
-            permittedUpdateFields: [facility.ALL_FIELDS],
+            permittedUpdateFields: allExcept(
+              [facility.REGULATORY_STATUS,
+              facility.REGISTRATION_NUMBER,
+              facility.ALL_FIELDS],
+              Object.values(facility)),
             permissions: [
               operations.DELETE,
               operations.READ,
