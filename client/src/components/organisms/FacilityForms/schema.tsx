@@ -8,39 +8,39 @@ const INVALID_NUM_MESSAGE = "Invalid number";
 const INVALID_TEXT = "This is not a valid text";
 
 export const contactSchema: yup.ObjectSchema<any> = yup.object().shape({
-  postalAddress: yup
+  postal_address: yup
     .string()
     .typeError(INVALID_TEXT)
     .min(5, "Postal Address is too short")
     .required(REQUIRED_MESSAGE),
-  physicalAddress: yup
+  physical_address: yup
     .string()
     .typeError(INVALID_TEXT)
     .min(3, "Physical Address is too short")
     .required(REQUIRED_MESSAGE),
-  contactName: yup
+  contact_person_fullname: yup
     .string()
     .typeError(INVALID_TEXT)
     .min(3, "Contact Name is too short")
     .required(REQUIRED_MESSAGE),
-  contactEmail: yup
+  contact_person_email: yup
     .string()
     .typeError(INVALID_TEXT)
     .email("Invalid Email format")
     .required(REQUIRED_MESSAGE),
-  contactPhoneNumber: yup
+  contact_person_phone: yup
     .string()
     .typeError(INVALID_TEXT)
     .min(8, PHONE_MIN_MESSAGE)
     .max(10, PHONE_MIN_MESSAGE)
     .matches(/^[0]{1}?[1,2,8,9]{1}?[0-9]{6,8}$/im, "Invalid Phone number")
     .required(REQUIRED_MESSAGE),
-  catchmentArea: yup
+  catchment_area: yup
     .string()
     .typeError(INVALID_TEXT)
     .min(3, "Catchment Area is too short")
     .required(REQUIRED_MESSAGE),
-  catchmentPopulation: yup
+  catchment_population: yup
     .number()
     .typeError(INVALID_NUM_MESSAGE)
     .integer()

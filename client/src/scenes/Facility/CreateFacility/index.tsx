@@ -11,6 +11,7 @@ import { IState } from "../../../services/types";
 import Unauthorized from "../../Error/401";
 import Stepper from "../../../components/molecules/AddFacilityStepper";
 import BasicDetails from "../../../components/organisms/FacilityForms/BasicDetails";
+import ContactDetails from "../../../components/organisms/FacilityForms/ContactDetails";
 
 export type IForms =
   | "Basic Details"
@@ -22,7 +23,7 @@ export type IForms =
 function CreateFacility() {
   const currentUser = useSelector((state: IState) => state.users.currentUser);
   const [state, setState] = useState({
-    activeForm: "Basic Details" as IForms,
+    activeForm: "Resources" as IForms,
     facility: null
   });
   const formSections = [
@@ -39,10 +40,12 @@ function CreateFacility() {
     localStorage.setItem("new_facility_active_form", formName);
   };
 
-  const onSubmitBasicDetails = (facility: any) => {
-    setState({ ...state, facility });
-    localStorage.setItem("new_facility_details", JSON.stringify(facility));
-    setActiveForm("Contacts & Location");
+  const onSubmitDetails = (facility: any, nextForm: IForms) => {
+    if (nextForm == "Contacts & Location") {
+      setState({ ...state, facility });
+      localStorage.setItem("new_facility_details", JSON.stringify(facility));
+    }
+    setActiveForm(nextForm);
   };
   return (
     <>
@@ -66,8 +69,18 @@ function CreateFacility() {
             <Container>
               {state.activeForm == formSections[0] && (
                 <BasicDetails
-                  onCreateOrUpdate={onSubmitBasicDetails}
+                  onCreateOrUpdate={(facility: any) =>
+                    onSubmitDetails(facility, "Contacts & Location")
+                  }
                 ></BasicDetails>
+              )}
+              {state.activeForm == formSections[1] && (
+                <ContactDetails
+                  facility={state.facility}
+                  onCreateOrUpdate={(facility: any) =>
+                    onSubmitDetails(facility, "Resources")
+                  }
+                ></ContactDetails>
               )}
             </Container>
           </div>

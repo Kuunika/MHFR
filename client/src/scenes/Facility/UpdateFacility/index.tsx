@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHospital } from "@fortawesome/free-solid-svg-icons";
 import OptionsBar from "../../../components/molecules/FacilityViewOptionsBar";
 import BasicDetails from "../../../components/organisms/FacilityForms/BasicDetails";
+import ContactDetails from "../../../components/organisms/FacilityForms/ContactDetails";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -105,7 +106,18 @@ function UpdateFacility() {
                         facility={facility}
                         onCreateOrUpdate={() =>
                           history.push(
-                            `facilities/${id}/${ui.activeFacilityPage}`
+                            `/facilities/${id}/${ui.activeFacilityPage}`
+                          )
+                        }
+                      />
+                    )}
+                    {ui.activeFacilityPage == pages.contact && (
+                      <ContactDetails
+                        update
+                        facility={facility}
+                        onCreateOrUpdate={() =>
+                          history.push(
+                            `/facilities/${id}/${ui.activeFacilityPage}`
                           )
                         }
                       />

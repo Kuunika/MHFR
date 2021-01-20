@@ -2,7 +2,7 @@ import React from "react";
 import Button from "./Button";
 import styled from "styled-components";
 
-export default (props: Props) => {
+const FormButtons = (props: Props) => {
   const { handleSubmit, isSubmitting, handleCancel, saveBtnText } = props;
   return (
     <Container data-test="formFooter">
@@ -27,6 +27,8 @@ export default (props: Props) => {
     </Container>
   );
 };
+
+export default FormButtons;
 type Props = {
   handleSubmit: Function;
   handleCancel: Function;

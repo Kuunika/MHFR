@@ -34,6 +34,7 @@ class SystemsModal extends React.Component<Props> {
       <React.Fragment>
         <Button
           theme="success"
+          style={{ fontSize: "0.7rem" }}
           onClick={() => {
             this.setOpen(true);
           }}

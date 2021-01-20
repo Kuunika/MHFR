@@ -81,17 +81,6 @@ function BasicDetails({
   };
 
   const createFacility = (values: any, { setSubmitting, resetForm }: any) => {
-    setSubmitting(true);
-    if (!auth.authenticated) {
-      toast.info(
-        <Notification
-          error
-          message="You are not Authorised to create/update a facility, Please Login"
-        />
-      );
-      setSubmitting(false);
-      return;
-    }
     let token = sessionStorage.getItem("token");
     if (token) {
       postBasicDetails(getAuthorizedBasicDetails(values, getUser().role), token)
@@ -122,16 +111,6 @@ function BasicDetails({
   };
 
   const updateFacility = (values: any, { setSubmitting, resetForm }: any) => {
-    if (!auth.authenticated) {
-      toast.info(
-        <Notification
-          error
-          message="You are not Authorised to create/update a facility, Please Login"
-        />
-      );
-      setSubmitting(false);
-      return;
-    }
     let token = sessionStorage.getItem("token");
     if (token) {
       swal({
@@ -151,6 +130,9 @@ function BasicDetails({
             token as any
           )
             .then(() => {
+              toast.info(
+                <Notification message="Facility Updated Successfully" />
+              );
               onCreateOrUpdate();
             })
             .catch(() => {
@@ -170,6 +152,17 @@ function BasicDetails({
   };
 
   const onSubmit = (values: any, { setSubmitting, resetForm }: any) => {
+    setSubmitting(true);
+    if (!auth.authenticated) {
+      toast.info(
+        <Notification
+          error
+          message="You are not Authorised to create/update a facility, Please Login"
+        />
+      );
+      setSubmitting(false);
+      return;
+    }
     if (update) {
       updateFacility(values, { setSubmitting, resetForm });
       return;
@@ -435,11 +428,11 @@ function BasicDetails({
 
 export default BasicDetails;
 
-const FormWrapper = styled.div`
+export const FormWrapper = styled.div`
   padding: 3rem;
 `;
 
-const FormFooter = styled.div`
+export const FormFooter = styled.div`
   display: flex;
   justify-content: end;
 `;

@@ -53,7 +53,15 @@ export const getBasicDetails = (data: any) => ({
 
 export const getContactDetails = (data: any, facilityId: number) => ({
   data: {
-    ...data,
+    physicalAddress: data.physical_address,
+    postalAddress: data.postal_address,
+    contactName: data.contact_person_fullname,
+    contactPhoneNumber: data.contact_person_phone,
+    contactEmail: data.contact_person_email,
+    catchmentArea: data.catchment_area,
+    catchmentPopulation: data.catchment_population,
+    longitude: data.longitude,
+    latitude: data.latitude,
     client: 1,
     updated_at: Date.now()
   },
