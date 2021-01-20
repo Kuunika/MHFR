@@ -57,6 +57,25 @@ export default (
           action.payload.includes(val.id)
         )
       };
+    case actions.fetchCurrentFacility + "_FULFILLED":
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          ...action.payload[0].data,
+          resources: action.payload[1].data.data,
+          services: uniqWith(
+            getServicesHierachyForRedux(
+              action.payload[2].data.data,
+              action.meta.services.list,
+              action.meta.services.types
+            ),
+            (curSer: any, nextSer: any) =>
+              curSer.service.id == nextSer.service.id
+          ),
+          utilities: action.payload[3].data.data
+        }
+      };
     case actions.fetchCurrentBasic + "_FULFILLED":
       return {
         ...state,

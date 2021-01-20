@@ -18,13 +18,13 @@
     "@types/react": "16.8.18",
     "@types/react-dom": "16.8.4",
     "@types/react-redux": "^7.0.9",
-    "@types/react-router-dom": "^4.3.3",
     "@types/react-tooltip": "^3.9.2",
     "@types/recharts": "^1.1.16",
     "@types/redux": "^3.6.0",
     "@types/styled-components": "^4.1.15",
+    "@types/sweetalert": "^2.0.4",
     "@types/yup": "^0.26.13",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "classnames": "^2.2.6",
     "dotenv": "^8.0.0",
     "formik": "^1.5.7",
@@ -38,7 +38,7 @@
     "react-google-maps": "^9.4.5",
     "react-materialize": "^2.6.0",
     "react-redux": "^7.0.3",
-    "react-router-dom": "^5.0.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
     "react-toastify": "^5.2.1",
     "react-tooltip": "^3.10.0",
@@ -75,6 +75,8 @@
     ]
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/react-router-dom": "^5.1.7",
     "cypress": "^3.8.2"
   }
 }

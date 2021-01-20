@@ -58,37 +58,37 @@ export const contactSchema: yup.ObjectSchema<any> = yup.object().shape({
 });
 
 export const basicSchema: yup.ObjectSchema<any> = yup.object().shape({
-  facilityName: yup
+  facility_name: yup
     .string()
     .typeError(INVALID_TEXT)
     .min(3, "Facility name must have atleast 3 characters")
     .required(REQUIRED_MESSAGE),
-  commonName: yup
+  common_name: yup
     .string()
     .typeError(INVALID_TEXT)
     .min(3, "Common name must have atleast 3 characters")
     .required(REQUIRED_MESSAGE),
-  facilityType: yup
+  facility_type_id: yup
     .number()
     .typeError(REQUIRED_MESSAGE)
     .required(REQUIRED_MESSAGE)
     .min(1, "Please select facility type"),
-  operationalStatus: yup
+  facility_operational_status_id: yup
     .number()
     .typeError(REQUIRED_MESSAGE)
     .required(REQUIRED_MESSAGE)
     .min(1, "Please select facility operational status"),
-  regulatoryStatus: yup
+  facility_regulatory_status_id: yup
     .number()
     .typeError(REQUIRED_MESSAGE)
     .required(REQUIRED_MESSAGE)
     .min(1, "Please select facility regulatory status"),
-  facilityOwner: yup
+  facility_owner_id: yup
     .number()
     .typeError(REQUIRED_MESSAGE)
     .required(REQUIRED_MESSAGE)
     .min(1, "Please select facility owner"),
-  district: yup
+  district_id: yup
     .number()
     .typeError(REQUIRED_MESSAGE)
     .required(REQUIRED_MESSAGE)

@@ -62,69 +62,65 @@ function FacilityCodes(props: Props) {
                 bodyStyle={{ marginBottom: "0px" }}
                 heading="Map Codes"
               >
-                <Grid container spacing={3}>
-                  {systems.map((sys, index) => (
-                    <>
-                      <Grid item xs={3} sm={3} md={3} lg={3}>
-                        <TextField
-                          value={systems[index].system}
-                          name="name"
-                          label="Name"
-                          placeholder="Enter Name"
-                          onChange={e =>
-                            onChange(index, e.target.value, "system")
-                          }
-                        />
-                      </Grid>
-                      <Grid item xs={3} sm={3} md={3} lg={3}>
-                        <TextField
-                          value={systems[index].code}
-                          name="code"
-                          label="Code"
-                          placeholder="Enter Code"
-                          onChange={e =>
-                            onChange(index, e.target.value, "code")
-                          }
-                        />
-                      </Grid>
-                      <Grid item xs={3} sm={3} md={3} lg={3}>
-                        <TextField
-                          value={systems[index].url}
-                          name="url"
-                          label="Url"
-                          placeholder="Enter url"
-                          onChange={e => onChange(index, e.target.value, "url")}
-                        />
-                      </Grid>
-                      <Grid item xs={3} sm={3} md={3} lg={3}>
-                        <div
+                {systems.map((sys, index) => (
+                  <Grid container spacing={3} key={index}>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
+                      <TextField
+                        value={systems[index].system}
+                        name="name"
+                        label="Name"
+                        placeholder="Enter Name"
+                        onChange={e =>
+                          onChange(index, e.target.value, "system")
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
+                      <TextField
+                        value={systems[index].code}
+                        name="code"
+                        label="Code"
+                        placeholder="Enter Code"
+                        onChange={e => onChange(index, e.target.value, "code")}
+                      />
+                    </Grid>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
+                      <TextField
+                        value={systems[index].url}
+                        name="url"
+                        label="Url"
+                        placeholder="Enter url"
+                        onChange={e => onChange(index, e.target.value, "url")}
+                      />
+                    </Grid>
+                    <Grid item xs={3} sm={3} md={3} lg={3}>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center"
+                        }}
+                      >
+                        <Button
                           style={{
+                            borderRadius: "50%",
+                            minWidth: "30px",
+                            height: "30px",
                             display: "flex",
                             justifyContent: "center",
-                            alignItems: "center"
+                            alignItems: "center",
+                            padding: "0px"
                           }}
-                        >
-                          <Button
-                            style={{
-                              borderRadius: "50%",
-                              minWidth: "30px",
-                              height: "30px",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              padding: "0px"
-                            }}
-                            theme="warning"
-                            icon={<FontAwesomeIcon icon={faMinus} />}
-                            onClick={() => {
-                              onRemove(index);
-                            }}
-                          />
-                        </div>
-                      </Grid>
-                    </>
-                  ))}
-                </Grid>
+                          theme="warning"
+                          icon={<FontAwesomeIcon icon={faMinus} />}
+                          onClick={() => {
+                            onRemove(index);
+                          }}
+                        />
+                      </div>
+                    </Grid>
+                  </Grid>
+                ))}
               </Card>
               <ModalFooter>
                 <Button onClick={onSave}>Save Configuration</Button>

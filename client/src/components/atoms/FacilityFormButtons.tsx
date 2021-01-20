@@ -35,9 +35,10 @@ type Props = {
 };
 
 const Container = styled.div`
-  padding: 10px;
-  margin-bottom: -11px;
-  background-color: #eee;
   display: flex;
   justify-content: flex-end;
+  padding: 10px;
+
+  background-color: #eee;
+  width: 100%;
 `;

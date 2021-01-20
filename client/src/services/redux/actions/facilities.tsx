@@ -18,14 +18,35 @@ import {
   deleteUtilities,
   putServices,
   deleteServices,
-  archiveFacility as archFacility
+  archiveFacility as archFacility,
+  getDependancies,
+  getCurrentFacility
 } from "../../api";
 import { groupIntersect, hasFilterValuesForType } from "../../helpers";
+import { IDependancies } from "../../types";
 
 export const fetchFacilities = () => {
   return {
     type: actions.fetchFacilities,
     payload: getFacilities()
+  };
+};
+
+export const fetchDependancies = () => {
+  return {
+    type: actions.fetchDependancies,
+    payload: getDependancies()
+  };
+};
+
+export const fetchCurrentFacility = (
+  facilityId: any,
+  dependancies: IDependancies
+) => {
+  return {
+    type: actions.fetchCurrentFacility,
+    payload: getCurrentFacility(facilityId),
+    meta: dependancies
   };
 };
 

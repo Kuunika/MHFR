@@ -42,17 +42,13 @@ const Code = styled.div`
   }
 `;
 const Message = styled.div`
-  font-size: 28px;
-  color: #222222;
-  margin-top: 15px;
-  @media (max-width: 700px) {
-    font-size: 20px;
-  }
+  color: #5a90dc;
+  text-align: center;
 `;
 const Img = styled.img`
-  margin: auto;
-  width: 200px;
+  margin: 2rem auto;
+  width: 80px;
   @media (max-width: 700px) {
-    width: 100px;
+    width: 80px;
   }
 `;

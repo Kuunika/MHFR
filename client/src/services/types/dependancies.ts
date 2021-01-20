@@ -118,4 +118,7 @@ export type IDependancies = {
   roles: {
     list: Array<IRole>;
   };
+  districts: {
+    list: Array<IDistrict>;
+  };
 };

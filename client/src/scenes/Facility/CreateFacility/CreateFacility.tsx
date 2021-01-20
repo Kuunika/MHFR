@@ -47,7 +47,7 @@ function CreateFacility(props: Props) {
       <Stepper active={active} sections={sections} />
       {
         <Container>
-          {active == sections[0] && (
+          {/* {active == sections[0] && (
             <BasicDetailsForm
               initialValues={basic(
                 null,
@@ -61,7 +61,7 @@ function CreateFacility(props: Props) {
               onCancel={onCancel}
               fromAdd
             />
-          )}
+          )} */}
           {active == sections[1] && (
             <ContactDetails
               initialValues={contact()}

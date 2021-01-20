@@ -38,17 +38,10 @@ const Container = styled.div`
 `;
 
 const Message = styled.div`
-  font-size: 28px;
-  color: #222222;
-  margin-top: 15px;
-  @media (max-width: 700px) {
-    font-size: 20px;
-  }
+  text-align: center;
+  color: #5a90dc;
 `;
 const Img = styled.img`
-  margin: auto;
-  width: 200px;
-  @media (max-width: 700px) {
-    width: 100px;
-  }
+  margin: 2rem auto;
+  width: 80px;
 `;

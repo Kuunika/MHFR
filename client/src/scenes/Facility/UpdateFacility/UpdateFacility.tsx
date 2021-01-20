@@ -60,11 +60,7 @@ function UpdateFacility(props: Props) {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12} md={3}>
               <Card heading="Facility menu">
-                <FacilitySubMenu
-                  menu={facilitySubMenu}
-                  onClick={onChangePage}
-                  activePage={activePage}
-                />
+                <FacilitySubMenu />
               </Card>
             </Grid>
             <Grid item xs={12} sm={12} md={9}>
@@ -89,7 +85,7 @@ function UpdateFacility(props: Props) {
                 action={`facility:${acAction}:update` as acActions}
                 allowed={() => (
                   <>
-                    {activePage == pages.summary && (
+                    {/* {activePage == pages.summary && (
                       <BasicDetailsForm
                         onCancel={onCancel}
                         initialValues={basic(facility)}
@@ -98,7 +94,7 @@ function UpdateFacility(props: Props) {
                         networkError={[]}
                         dependancies={dependancies}
                       />
-                    )}
+                    )} */}
                     {activePage == pages.contact && (
                       <ContactDetailsForm
                         onCancel={onCancel}

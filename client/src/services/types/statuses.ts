@@ -39,6 +39,7 @@ export type IStatuses = {
   fetchFilteredFacilities?: boolean;
   fetchFacilityTypes?: boolean;
 
+  fetchCurrentFacility?: boolean;
   fetchCurrentBasic?: boolean;
   fetchCurrentResources?: boolean;
   fetchCurrentServices?: boolean;

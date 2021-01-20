@@ -1,10 +1,11 @@
 // @ts-ignore
 import { join, camelCase, split } from "lodash";
+import { IErrors } from "../../types";
 import actions from "../actions/actions";
 export default (
   state = {
     dependancyError: false
-  },
+  } as IErrors,
   action: any
 ) => {
   let actionGroup = join(
@@ -20,8 +21,19 @@ export default (
         ...state,
         [`${formattedActionGroup}`]: []
       };
+    case `${actions.fetchDependancies}_REJECTED`:
+      return {
+        ...state,
+        ["dependancyError"]: true,
+        [formattedActionGroup]: action.error
+          ? action.payload &&
+            action.payload.response &&
+            action.payload.response.data.error.details
+            ? action.payload.response.data.error.details.messages
+            : ["There was a general error"]
+          : ["There was a network error "]
+      };
     case `${actionGroup}_REJECTED`:
-      console.log(action.payload);
       return {
         ...state,
         [formattedActionGroup]: action.error
@@ -37,11 +49,7 @@ export default (
         ...state,
         [formattedActionGroup]: []
       };
-    case actions.dependacyError:
-      return {
-        ...state,
-        ["dependancyError"]: true
-      };
+
     default:
       return state;
   }

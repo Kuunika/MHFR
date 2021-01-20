@@ -52,6 +52,7 @@ export default {
   fetchFilteredFacilities: "FETCH_FILTERED_FACILITIES",
   fetchFacilityTypes: "FETCH_FACILITY_TYPES",
 
+  fetchCurrentFacility: "FETCH_CURRENT_FACILITY",
   fetchCurrentBasic: "FETCH_CURRENT_BASIC",
   fetchCurrentResources: "FETCH_CURRENT_RESOURCES",
   fetchCurrentServices: "FETCH_CURRENT_SERVICES",

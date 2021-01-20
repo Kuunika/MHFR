@@ -41,6 +41,7 @@ export type IErrors = {
   fetchFilteredFacilities?: Array<string>;
   fetchFacilityTypes?: Array<string>;
 
+  fetchCurrentFacility?: Array<string>;
   fetchCurrentBasic?: Array<string>;
   fetchCurrentResources?: Array<string>;
   fetchCurrentServices?: Array<string>;

@@ -4,6 +4,37 @@ import {
 } from "../../../services/helpers";
 // @ts-ignore
 import { uniqWith, isEqual } from "lodash";
+import { check } from "../../../components/atoms/Ac";
+
+export const getAuthorizedBasicDetails = (data: any, userRole: string) => {
+  let value = {
+    facility_name: data.facility_name,
+    common_name: data.common_name,
+    facility_date_opened: data.facility_date_opened,
+    facility_owner_id: data.facility_owner_id,
+    facility_operational_status_id: data.facility_operational_status_id,
+    district_id: data.district_id,
+    facility_code_mapping: data.facility_code_mapping,
+    client_id: 1,
+    updated_at: Date.now()
+  } as any;
+
+  if (check(undefined, userRole, "facility:basic_details:facility_type")) {
+    value = { ...value, facility_type_id: data.facility_type_id };
+  }
+  if (check(undefined, userRole, "facility:basic_details:licensing_status")) {
+    value = {
+      ...value,
+      facility_regulatory_status_id: data.facility_regulatory_status_id
+    };
+  }
+  if (
+    check(undefined, userRole, "facility:basic_details:registration_number")
+  ) {
+    value = { ...value, registration_number: data.registration_number };
+  }
+  return value;
+};
 
 export const getBasicDetails = (data: any) => ({
   registration_number: data.registrationNumber,

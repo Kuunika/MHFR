@@ -1,15 +1,7 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-// @ts-ignore
-import { split } from "lodash";
-import {
-  fetchCurrentResources,
-  fetchCurrentBasic,
-  fetchCurrentServices,
-  fetchCurrentUtilities,
-  archiveFacility
-} from "../../../services/redux/actions/facilities";
-import { fetchServiceTypes } from "../../../services/redux/actions/dependancies";
+import React, { useEffect, useState } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { useHistory, useParams } from "react-router-dom";
+import { fetchCurrentFacility } from "../../../services/redux/actions/facilities";
 import { setActiveFacilityPage } from "../../../services/redux/actions/ui";
 import ViewFacility from "./ViewFacility";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -23,22 +15,41 @@ import {
   faStethoscope
 } from "@fortawesome/free-solid-svg-icons";
 import { FacilityPages as pages } from "../../../services/utils";
-import { basic } from "../../../components/organisms/FacilityForms/initialValues";
 import StatusBadge from "../../../components/atoms/StatusBadge";
 import swal from "sweetalert";
 import { toast } from "react-toastify";
 import Notification from "../../../components/atoms/Notification";
+import { IState } from "../../../services/types";
+import { archiveFacility } from "../../../services/api";
 
 const API = process.env.REACT_APP_API_URL;
 
 library.add(faPlus, faHospital, faEnvelope, faBed, faWifi, faStethoscope);
 
-export class index extends Component<any> {
-  state = {
-    facilityId: null
-  };
+const Facility = () => {
+  const { id, page }: { id: string; page: string } = useParams();
+  const { dependancies, status, facilities, ui } = useSelector(
+    (state: IState) => state
+  );
 
-  badges = [
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchCurrentFacility(id, dependancies));
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(
+        setActiveFacilityPage(page && page.length > 0 ? page : pages.summary)
+      );
+    }
+  }, [id, page]);
+
+  const badges = [
     {
       label: "Closed",
       color: "#B80F0A"
@@ -61,7 +72,7 @@ export class index extends Component<any> {
     }
   ];
 
-  facilitySubMenu = [
+  const facilitySubMenu = [
     {
       link: pages.summary,
       name: "Facility Summary",
@@ -89,7 +100,7 @@ export class index extends Component<any> {
     }
   ];
 
-  onDeleteError = () => {
+  const onDeleteError = () => {
     toast.info(
       <Notification
         error
@@ -100,21 +111,22 @@ export class index extends Component<any> {
     swal.close();
   };
 
-  onDeleteSuccess = () => {
+  const onDeleteSuccess = () => {
     toast.info(<Notification message={`Facility Deleted!!!`} />);
-    this.props.history.push(`/facilities`);
+    history.push(`/facilities`);
     // @ts-ignore
     swal.close();
   };
 
-  handleFacilityArchive = async () => {
+  const handleFacilityArchive = async () => {
     let token = (await sessionStorage.getItem("token")) || "";
     if (token == "") return;
 
     // @ts-ignore
     swal({
       icon: "warning",
-      title: `Are you sure you want to archive ${this.props.facility.facility_name}?`,
+      title: `Are you sure you want to archive ${facilities.current
+        .facility_name || ""}?`,
       buttons: {
         cancel: { text: "Cancel", closeModal: true, visible: true },
         confirm: { text: "Delete" }
@@ -127,69 +139,34 @@ export class index extends Component<any> {
           icon: "info",
           title: `Archiving Facility. Please wait...`
         });
-        this.props
-          .archiveFacility({ id: this.state.facilityId }, token)
+        archiveFacility({ id: id, archived_date: new Date() }, token)
           .then(() => {
-            this.onDeleteSuccess();
+            onDeleteSuccess();
           })
           .catch(() => {
-            this.onDeleteError();
+            onDeleteError();
           });
       }
     });
   };
 
-  downloadFacility = () => {
-    window.open(`${API}/facilities/download/${this.state.facilityId}`);
+  const downloadFacility = () => {
+    window.open(`${API}/facilities/download/${id}`);
   };
 
-  handlePageChange = (page: any) => {
-    this.props.setActiveFacilityPage(page);
-    this.props.history.push(`/facilities/${this.state.facilityId}/${page}`);
+  const handlePageChange = (page: any) => {
+    dispatch(setActiveFacilityPage(page));
+    history.push(`/facilities/${id}/${page}`);
   };
 
-  componentDidMount() {
-    let location = split(window.location.pathname, "/");
-    let facilityId =
-      location.length == 3
-        ? location[location.length - 1]
-        : location[location.length - 2];
-    let currentPage =
-      location.length == 3 ? pages.summary : location[location.length - 1];
-
-    this.props.setActiveFacilityPage(currentPage);
-    this.setState({ facilityId });
-
-    this.props.fetchServiceTypes().then(() => {
-      this.props.fetchCurrentServices(facilityId, this.props.dependancies);
-    });
-    this.props.fetchCurrentBasic(facilityId);
-    this.props.fetchCurrentResources(facilityId);
-    this.props.fetchCurrentUtilities(facilityId);
-  }
-
-  componentWillReceiveProps(newProps: any) {
-    if (
-      newProps.match.params.id &&
-      newProps.match.params.id != this.state.facilityId
-    ) {
-      let facilityId = newProps.match.params.id;
-      this.setState({ facilityId });
-      this.props.fetchCurrentBasic(facilityId);
-      this.props.fetchCurrentResources(facilityId);
-      this.props.fetchCurrentServices(facilityId, this.props.dependancies);
-      this.props.fetchCurrentUtilities(facilityId);
-    }
-  }
-
-  getBadge = () => {
-    if (!this.props.facility.operationalStatus) {
+  const getBadge = () => {
+    if (!facilities.current.operationalStatus) {
       return <span />;
     }
-    const badge = this.badges.filter(
+    const badge = badges.filter(
       (badge: any) =>
         badge.label ==
-        this.props.facility.operationalStatus.facility_operational_status
+        facilities.current.operationalStatus?.facility_operational_status
     );
     return badge.length == 0 ? (
       <span />
@@ -198,54 +175,24 @@ export class index extends Component<any> {
     );
   };
 
-  isLoading = () =>
-    this.props.loading.fetchCurrentBasic ||
-    this.props.loading.fetchCurrentResources ||
-    this.props.loading.fetchCurrentServices ||
-    this.props.loading.fetchCurrentServices ||
-    this.props.loading.fetchCurrentUtilities;
+  return (
+    <ViewFacility
+      archiveFacility={handleFacilityArchive}
+      activePage={ui.activeFacilityPage}
+      basic={facilities.current}
+      resources={facilities.current.resources}
+      utilities={facilities.current.utilities}
+      services={facilities.current.services}
+      onChangePage={(page: any) => {
+        handlePageChange(page);
+      }}
+      onEditDetails={() => {}}
+      facilitySubMenu={facilitySubMenu}
+      downloadFacility={downloadFacility}
+      isLoading={status.fetchCurrentFacility}
+      badge={getBadge()}
+    />
+  );
+};
 
-  render() {
-    const { facility } = this.props;
-    const { services, utilities, resources } = facility;
-
-    return (
-      <ViewFacility
-        archiveFacility={this.handleFacilityArchive}
-        activePage={this.props.ui.activeFacilityPage}
-        basic={facility}
-        resources={resources}
-        utilities={utilities}
-        services={services}
-        onChangePage={(page: any) => {
-          this.handlePageChange(page);
-        }}
-        onEditDetails={() => {}}
-        facilitySubMenu={this.facilitySubMenu}
-        downloadFacility={this.downloadFacility}
-        isLoading={this.isLoading()}
-        badge={this.getBadge()}
-      />
-    );
-  }
-}
-
-const mapStateToProps = (state: any) => ({
-  ui: state.ui,
-  facility: state.facilities.current,
-  loading: state.status,
-  dependancies: state.dependancies
-});
-
-export default connect(
-  mapStateToProps,
-  {
-    fetchCurrentResources,
-    fetchCurrentBasic,
-    fetchCurrentServices,
-    fetchCurrentUtilities,
-    fetchServiceTypes,
-    setActiveFacilityPage,
-    archiveFacility
-  }
-)(index);
+export default Facility;
