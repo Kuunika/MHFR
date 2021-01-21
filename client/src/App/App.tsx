@@ -67,7 +67,7 @@ const App: React.FC = () => {
         closeButton={false}
         style={{
           zIndex: "1800",
-          position: "absolute",
+          position: "fixed",
           top: "0",
           left: "0",
           width: "100vw",

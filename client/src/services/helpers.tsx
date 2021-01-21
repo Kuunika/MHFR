@@ -3,6 +3,7 @@ import { MenuItem } from "@material-ui/core";
 // @ts-ignore
 import { intersection, slice, uniqWith } from "lodash";
 import store from "../services/redux/store.js";
+import { IService } from "./types/index.js";
 
 export const renderOptions = (
   dependancy: any,
@@ -99,6 +100,36 @@ export const getServicesHierachyForRedux: any = (
       level + 1
     )
   }));
+};
+
+export const getServicesFromLeavesForPost = (
+  leaves: Array<number>,
+  allServices: Array<IService> = [],
+  accServices: Array<IService> = []
+) => {
+  for (let leaf of leaves) {
+    let currentService = allServices.find(s => s.id === leaf);
+    if (currentService) {
+      accServices =
+        currentService.service_category_id == 0
+          ? [...accServices, leaf]
+          : [
+              ...accServices,
+              leaf,
+              ...getServicesFromLeaves(
+                allServices.filter(
+                  ser => ser.id == currentService?.service_category_id
+                ),
+                allServices,
+                accServices
+              )
+            ];
+    }
+  }
+  return uniqWith(
+    accServices,
+    (curSer: any, nextSer: any) => curSer.id == nextSer.id
+  );
 };
 
 export const getServicesFromLeaves = (

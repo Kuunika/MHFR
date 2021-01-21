@@ -127,7 +127,7 @@ function UpdateFacility(props: Props) {
                         dependancies={dependancies}
                       />
                     )} */}
-                    {activePage == pages.services &&
+                    {/* {activePage == pages.services &&
                       !loadingStates.fetchCurrentServices && (
                         <ServicesForm
                           onCancel={onCancel}
@@ -136,7 +136,7 @@ function UpdateFacility(props: Props) {
                           networkError={[]}
                           dependancies={dependancies}
                         />
-                      )}
+                      )} */}
                   </>
                 )}
                 denied={() => <Unauthorized />}

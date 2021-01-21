@@ -14,6 +14,7 @@ import BasicDetails from "../../../components/organisms/FacilityForms/BasicDetai
 import ContactDetails from "../../../components/organisms/FacilityForms/ContactDetails";
 import Resources from "../../../components/organisms/FacilityForms/Resources";
 import Utilities from "../../../components/organisms/FacilityForms/Utilities";
+import Services from "../../../components/organisms/FacilityForms/Services";
 
 export type IForms =
   | "Basic Details"
@@ -25,7 +26,7 @@ export type IForms =
 function CreateFacility() {
   const currentUser = useSelector((state: IState) => state.users.currentUser);
   const [state, setState] = useState({
-    activeForm: "Utilities" as IForms,
+    activeForm: "Services" as IForms,
     facility: null
   });
   const formSections = [
@@ -99,6 +100,14 @@ function CreateFacility() {
                     onSubmitDetails(facility, "Services")
                   }
                 ></Utilities>
+              )}
+              {state.activeForm == formSections[4] && (
+                <Services
+                  facility={state.facility}
+                  onCreateOrUpdate={(facility: any) =>
+                    onSubmitDetails(facility, "Services")
+                  }
+                ></Services>
               )}
             </Container>
           </div>

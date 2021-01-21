@@ -22,6 +22,7 @@ import BasicDetails from "../../../components/organisms/FacilityForms/BasicDetai
 import ContactDetails from "../../../components/organisms/FacilityForms/ContactDetails";
 import Resources from "../../../components/organisms/FacilityForms/Resources";
 import Utilities from "../../../components/organisms/FacilityForms/Utilities";
+import Services from "../../../components/organisms/FacilityForms/Services";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -137,6 +138,17 @@ function UpdateFacility() {
                     )}
                     {ui.activeFacilityPage == pages.utilities && (
                       <Utilities
+                        update
+                        facility={facility}
+                        onCreateOrUpdate={() =>
+                          history.push(
+                            `/facilities/${id}/${ui.activeFacilityPage}`
+                          )
+                        }
+                      />
+                    )}
+                    {ui.activeFacilityPage == pages.services && (
+                      <Services
                         update
                         facility={facility}
                         onCreateOrUpdate={() =>
