@@ -13,6 +13,7 @@ import Stepper from "../../../components/molecules/AddFacilityStepper";
 import BasicDetails from "../../../components/organisms/FacilityForms/BasicDetails";
 import ContactDetails from "../../../components/organisms/FacilityForms/ContactDetails";
 import Resources from "../../../components/organisms/FacilityForms/Resources";
+import Utilities from "../../../components/organisms/FacilityForms/Utilities";
 
 export type IForms =
   | "Basic Details"
@@ -24,7 +25,7 @@ export type IForms =
 function CreateFacility() {
   const currentUser = useSelector((state: IState) => state.users.currentUser);
   const [state, setState] = useState({
-    activeForm: "Resources" as IForms,
+    activeForm: "Utilities" as IForms,
     facility: null
   });
   const formSections = [
@@ -90,6 +91,14 @@ function CreateFacility() {
                     onSubmitDetails(facility, "Utilities")
                   }
                 ></Resources>
+              )}
+              {state.activeForm == formSections[3] && (
+                <Utilities
+                  facility={state.facility}
+                  onCreateOrUpdate={(facility: any) =>
+                    onSubmitDetails(facility, "Services")
+                  }
+                ></Utilities>
               )}
             </Container>
           </div>

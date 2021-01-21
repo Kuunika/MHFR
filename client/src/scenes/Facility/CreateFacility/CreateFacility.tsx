@@ -84,7 +84,7 @@ function CreateFacility(props: Props) {
               fromAdd
             />
           )} */}
-          {active == sections[3] && (
+          {/* {active == sections[3] && (
             <UtilityDetails
               initialValues={utilities()}
               onSubmit={onSubmit}
@@ -93,7 +93,7 @@ function CreateFacility(props: Props) {
               onCancel={onCancel}
               fromAdd
             />
-          )}
+          )} */}
           {active == sections[4] && (
             <ServicesForm
               initialValues={services()}
