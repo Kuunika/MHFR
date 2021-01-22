@@ -3,6 +3,7 @@ import styled from "styled-components";
 import SelectField from "../atoms/FilterSelect";
 import { Grid } from "@material-ui/core";
 import moment from "moment";
+import { IFilterValues } from "../../services/types";
 
 function FacilityBasicFilterTab(props: Props) {
   const dateFormat = "MMM YYYY";
@@ -15,14 +16,15 @@ function FacilityBasicFilterTab(props: Props) {
       label: `${moment()
         .subtract(4, "months")
         .format(dateFormat)} - ${moment().format(dateFormat)}`,
-      range: [
+      values: [
         moment()
           .subtract(4, "months")
           .format(rangeDFormat),
         moment()
           .add(1, "months")
           .format(rangeDFormat)
-      ]
+      ],
+      range: true
     },
     {
       id: 1,
@@ -32,14 +34,15 @@ function FacilityBasicFilterTab(props: Props) {
         .format(dateFormat)} - ${moment()
         .subtract(5, "months")
         .format(dateFormat)}`,
-      range: [
+      values: [
         moment()
           .subtract(8, "months")
           .format(rangeDFormat),
         moment()
           .subtract(4, "months")
           .format(rangeDFormat)
-      ]
+      ],
+      range: true
     },
     {
       id: 2,
@@ -49,14 +52,15 @@ function FacilityBasicFilterTab(props: Props) {
         .format(dateFormat)} - ${moment()
         .subtract(9, "months")
         .format(dateFormat)}`,
-      range: [
+      values: [
         moment()
           .subtract(12, "months")
           .format(rangeDFormat),
         moment()
           .subtract(8, "months")
           .format(rangeDFormat)
-      ]
+      ],
+      range: true
     },
     {
       id: 4,
@@ -64,14 +68,15 @@ function FacilityBasicFilterTab(props: Props) {
       label: `< ${moment()
         .subtract(13, "months")
         .format(dateFormat)}`,
-      range: [
+      values: [
         moment("1970-01"),
         moment()
           .subtract(12, "months")
           .format(rangeDFormat)
-      ]
+      ],
+      range: true
     }
-  ];
+  ] as Array<IFilterValues>;
 
   const [values, setValues] = useState({
     districts: -1,

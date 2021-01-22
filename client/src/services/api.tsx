@@ -1,7 +1,18 @@
 import axios from "axios";
+import {
+  getAdvancedBasicFilter,
+  getAdvancedResourcesFilter,
+  getUtilitiesAdvancedFilter
+} from "../scenes/Facility/helpers";
+import { IFilterValues } from "./types";
 
 const API = process.env.REACT_APP_API_URL;
 
+export const getFilteredFacilities = (filterValues: Array<IFilterValues>) => {
+  const basicFilter = getAdvancedBasicFilter(filterValues);
+  const resourcesFilter = getAdvancedResourcesFilter(filterValues);
+  const utilitiesFilter = getUtilitiesAdvancedFilter(filterValues);
+};
 export const getDependancies = () => {
   const uris = [
     axios.get(`${API}/Utilities`),

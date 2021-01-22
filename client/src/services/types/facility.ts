@@ -150,7 +150,7 @@ export type IFilterValues = {
   type: IFilterTypes;
   id: number;
   label: string;
-  values?: Array<number>;
+  values?: Array<number | string>;
   range?: boolean;
 };
 export type IAdvancedFilter = {
