@@ -16,11 +16,13 @@ import { postUtilities } from "../../../services/api";
 function Utilities({
   facility,
   update,
-  onCreateOrUpdate
+  onCreateOrUpdate,
+  onCancel
 }: {
   update?: boolean;
   facility: IFacilityCurrent | null;
   onCreateOrUpdate: Function;
+  onCancel: Function;
 }) {
   const [initialValues, setInitialValues] = useState({ utilities: [] } as any);
   const { utilities } = useSelector((state: IState) => state.dependancies);
@@ -119,7 +121,6 @@ function Utilities({
     }
     createUtilities(values, { setSubmitting, resetForm });
   };
-  const onCancel = () => {};
 
   const onUtilityClick = (utility: IUtility) => {
     if (initialValues.utilities.includes(utility.id)) {

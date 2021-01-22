@@ -16,11 +16,13 @@ import { getResources } from "../../../scenes/Facility/CreateFacility/helpers";
 function Resources({
   facility,
   update,
-  onCreateOrUpdate
+  onCreateOrUpdate,
+  onCancel
 }: {
   update?: boolean;
   facility: IFacilityCurrent | null;
   onCreateOrUpdate: Function;
+  onCancel: Function;
 }) {
   const [initialValues, setInitialValues] = useState({} as any);
   const auth = useSelector((state: IState) => state.users.currentUser);
@@ -126,7 +128,7 @@ function Resources({
     }
     createResources(values, { setSubmitting, resetForm });
   };
-  const onCancel = () => {};
+
   return (
     <Paper>
       <Formik

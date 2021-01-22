@@ -1,5 +1,5 @@
-import React from "react";
-import { Grid } from "@material-ui/core";
+import React, { useState } from "react";
+import { Collapse, Grid } from "@material-ui/core";
 import SectionTitle from "../atoms/FacilityViewSectionTitle";
 import FacilityDetail from "../atoms/FacilityDetail";
 import { connect } from "react-redux";
@@ -10,15 +10,21 @@ import {
   faFilter,
   faMobile,
   faTrash,
-  faCogs
+  faCogs,
+  faMinusCircle,
+  faPlusCircle
 } from "@fortawesome/free-solid-svg-icons";
 // @ts-ignore
 import { uniq, uniqWith, isEqual } from "lodash";
+import { IServiceCurrent, IServiceType } from "../../services/types";
 
 library.add(faBolt, faFilter, faMobile, faTrash, faCogs);
 
 function FacilityDetails(props: Props) {
   const { services } = props;
+  const [activeServiceType, setactiveServiceType] = useState(
+    [] as Array<number>
+  );
 
   const levelStyles = [
     {
@@ -57,62 +63,50 @@ function FacilityDetails(props: Props) {
     }
   };
 
-  const getServiceTypes = () =>
-    services
-      ? uniqWith(services.map((ser: any) => ser.serviceType), isEqual)
+  const serviceTypes: Array<IServiceType> =
+    services && services.length > 0
+      ? uniqWith(
+          services.map(ser => ser.serviceType),
+          isEqual
+        )
       : [];
-
-  const getServicesByType = (type: any, services: any) =>
-    services.filter((ser: any) => ser.service.service_type_id === type.id);
-
-  const renderServicesForType = (type: any, services: any) => {
-    var data = getServicesByType(type, services);
-    return (
-      <>
-        <SectionTitle
-          icon={getServiceTypeIcon(type.service_type)}
-          text={type.service_type}
-        />
-        {data.map((data: any) => (
-          <>{renderService(data, levelStyles)}</>
-        ))}
-      </>
-    );
+  const onClickServiceType = (type: number) => {
+    if (activeServiceType.includes(type))
+      return setactiveServiceType(activeServiceType.filter(n => n != type));
+    setactiveServiceType([...activeServiceType, type]);
   };
-
-  const renderService = (service: any, levelStyles: any, level = 0) => {
-    const style =
-      level > levelStyles.length - 1
-        ? { ...levelStyles[2], marginLeft: `${level + 12}px` }
-        : levelStyles[level];
-    if (
-      typeof service.children === "undefined" ||
-      service.children.length === 0
-    ) {
-      return (
-        <div data-test={`serviceDetail${level}`} style={style}>
-          {service.service.service_name}
-        </div>
-      );
-    }
-    return (
-      <div data-test={`serviceDetail${level}`} style={style}>
-        {service.service.service_name}
-        {service.children.map((ser: any) =>
-          renderService(ser, levelStyles, level + 1)
-        )}
-      </div>
-    );
-  };
-
-  const presentTypes = services ? getServiceTypes() : [];
-
   return (
-    <Grid container data-test="servicesContainer">
-      {presentTypes.map((type: any) => {
+    <Grid container data-test="servicesContainer" spacing={3}>
+      {serviceTypes.map(type => {
         return (
-          <Grid key={type.id} xs={12} sm={6} md={6}>
-            {renderServicesForType(type, services)}
+          <Grid item key={type.id} xs={12} sm={6} md={6} xl={6}>
+            <h3
+              onClick={() => onClickServiceType(type.id)}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontWeight: "bold",
+                borderBottom: "1px solid #ededed",
+                padding: "10px 5px",
+                cursor: "pointer"
+              }}
+            >
+              <div>{type.service_type}</div>
+              <div>
+                {activeServiceType.includes(type.id) ? (
+                  <FontAwesomeIcon icon={faMinusCircle}></FontAwesomeIcon>
+                ) : (
+                  <FontAwesomeIcon icon={faPlusCircle}></FontAwesomeIcon>
+                )}
+              </div>
+            </h3>
+            <Collapse in={activeServiceType.includes(type.id)}>
+              {services
+                .filter(ser => ser.service.service_type_id === type.id)
+                .map((service: any) => (
+                  <ServiceNode key={`services${service.id}`} option={service} />
+                ))}
+            </Collapse>
           </Grid>
         );
       })}
@@ -123,5 +117,70 @@ function FacilityDetails(props: Props) {
 export default FacilityDetails;
 
 type Props = {
-  services: any;
+  services: Array<IServiceCurrent>;
+};
+const ServiceNode = ({ option }: { option: IServiceCurrent }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      {option.children.length === 0 ? (
+        <LastChildNode service={option} />
+      ) : (
+        <div style={{ marginLeft: "1rem" }}>
+          <ParentNode
+            onClick={() => setOpen(!open)}
+            service={option}
+            open={open}
+          />
+          {open && (
+            <div style={{ marginLeft: "1rem" }}>
+              {option.children.map(o => (
+                <ServiceNode key={o.service.id} option={o} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+const LastChildNode = ({ service }: { service: IServiceCurrent }) => {
+  return (
+    <div style={{ marginLeft: "1rem", display: "flex", alignItems: "center" }}>
+      {service.service.service_name}
+    </div>
+  );
+};
+
+const ParentNode = ({
+  service,
+  onClick,
+  open
+}: {
+  service: IServiceCurrent;
+  onClick: Function;
+  open: boolean;
+}) => {
+  return (
+    <div
+      onClick={onClick as any}
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        borderBottom: "1px solid #ededed",
+        padding: "5px 5px",
+        cursor: "pointer",
+        fontSize: "1rem"
+      }}
+    >
+      <div>{service.service.service_name}</div>
+      <div>
+        {open ? (
+          <FontAwesomeIcon icon={faMinusCircle}></FontAwesomeIcon>
+        ) : (
+          <FontAwesomeIcon icon={faPlusCircle}></FontAwesomeIcon>
+        )}
+      </div>
+    </div>
+  );
 };

@@ -3,7 +3,14 @@ import { MenuItem } from "@material-ui/core";
 // @ts-ignore
 import { intersection, slice, uniqWith } from "lodash";
 import store from "../services/redux/store.js";
-import { IService } from "./types/index.js";
+import {
+  IService,
+  IFacilityService,
+  IFacilityCurrent,
+  IFacilityType,
+  IServiceCurrent,
+  IServiceType
+} from "./types/index.js";
 
 export const renderOptions = (
   dependancy: any,
@@ -60,46 +67,62 @@ export const getServicesHierachy: any = (
 };
 
 export const getServicesHierachyForRedux: any = (
-  services: Array<any>,
-  allServices: Array<any> = [],
-  serviceTypes: Array<any> = [],
+  services: Array<IFacilityService>,
+  allServices: Array<IServiceCurrent> = [],
+  serviceTypes: Array<IServiceType> = [],
   level: number = 0
 ) => {
-  allServices =
-    level == 0
-      ? services.map((ser: any) => {
+  if ((level = 0)) {
+    return uniqWith(
+      services
+        .filter(serv => serv.service.service_category_id === 0)
+        .map(ser => {
           return {
             service: ser.service,
             serviceType: serviceTypes.filter(
               (type: any) => type.id == ser.service.service_type_id
             )[0],
-            facilityService: ser
-          };
-        })
-      : [...allServices];
-
-  const curServices =
-    level == 0
-      ? allServices.filter(
-          ser => ser.service && ser.service.service_category_id == 0
-        )
-      : [...services];
-
-  if (curServices.length == 0) {
-    return [];
+            facilityService: ser,
+            children: [
+              ...getServicesHierachyForRedux(
+                services.filter(
+                  s => s.service.service_category_id === ser.service.id
+                ),
+                allServices,
+                serviceTypes,
+                level + 1
+              )
+            ]
+          } as IServiceCurrent;
+        }),
+      (c: IServiceCurrent, n: IServiceCurrent) => c.service.id === n.service.id
+    );
   }
 
-  return curServices.map(service => ({
-    ...service,
-    children: getServicesHierachyForRedux(
-      allServices.filter(
-        ser => ser.service.service_category_id == service.service.id
-      ),
-      allServices,
-      serviceTypes,
-      level + 1
-    )
-  }));
+  if (services.length === 0) return [];
+
+  return uniqWith(
+    services.map(ser => {
+      return {
+        service: ser.service,
+        serviceType: serviceTypes.filter(
+          (type: any) => type.id == ser.service.service_type_id
+        )[0],
+        facilityService: ser,
+        children: [
+          ...getServicesHierachyForRedux(
+            services.filter(
+              s => s.service.service_category_id === ser.service.id
+            ),
+            allServices,
+            serviceTypes,
+            level + 1
+          )
+        ]
+      } as IServiceCurrent;
+    }),
+    (c: IServiceCurrent, n: IServiceCurrent) => c.service.id === n.service.id
+  );
 };
 
 export const getServicesFromLeavesForPost = (

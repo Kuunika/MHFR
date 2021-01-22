@@ -127,6 +127,14 @@ export type IFacilityCurrent = {
   };
 };
 
+export type IFacilityService = {
+  service_id: number;
+  facility_id: number;
+  client_id: number;
+  created_date: string;
+  id: number;
+  service: IService;
+};
 export type IFilterTypes =
   | "districts"
   | "facilityTypes"

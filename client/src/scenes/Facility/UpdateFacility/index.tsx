@@ -23,6 +23,7 @@ import ContactDetails from "../../../components/organisms/FacilityForms/ContactD
 import Resources from "../../../components/organisms/FacilityForms/Resources";
 import Utilities from "../../../components/organisms/FacilityForms/Utilities";
 import Services from "../../../components/organisms/FacilityForms/Services";
+import { getCurrentFacility } from "../../../services/api";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -46,12 +47,15 @@ function UpdateFacility() {
       : page;
 
   useEffect(() => {
-    if (!facility.id || facility.id != Number(id)) {
+    if (
+      (!facility.id || facility.id != Number(id)) &&
+      dependancies.facilityTypes.list.length > 0
+    ) {
       dispatch(fetchCurrentFacility(id, dependancies));
       return;
     }
     setFacilityLoadState("loaded");
-  }, [facility, id]);
+  }, [facility, id, dependancies]);
 
   useEffect(() => {
     if (
@@ -69,6 +73,30 @@ function UpdateFacility() {
 
   const downloadFacility = () => {
     window.open(`${API}/facilities/download/${id}`);
+  };
+  const onCancel = () => {
+    // @ts-ignore
+    swal({
+      icon: "warning",
+      title: "Are You Sure You Want To Cancel ?",
+      text: "All unsaved data will be lost",
+      // @ts-ignore
+      buttons: {
+        cancel: "No",
+        confirm: "Yes"
+      },
+      closeOnClickOutside: false
+    }).then(async (response: any) => {
+      if (response) {
+        history.push(`/facilities/${id}/${ui.activeFacilityPage}`);
+        localStorage.clear();
+      }
+    });
+  };
+
+  const onCreateOrUpdate = () => {
+    dispatch(getCurrentFacility(facility.id));
+    history.push(`/facilities/${id}/${ui.activeFacilityPage}`);
   };
 
   return (
@@ -107,55 +135,40 @@ function UpdateFacility() {
                       <BasicDetails
                         update
                         facility={facility}
-                        onCreateOrUpdate={() =>
-                          history.push(
-                            `/facilities/${id}/${ui.activeFacilityPage}`
-                          )
-                        }
+                        onCreateOrUpdate={onCreateOrUpdate}
+                        onCancel={onCancel}
                       />
                     )}
                     {ui.activeFacilityPage == pages.contact && (
                       <ContactDetails
                         update
                         facility={facility}
-                        onCreateOrUpdate={() =>
-                          history.push(
-                            `/facilities/${id}/${ui.activeFacilityPage}`
-                          )
-                        }
+                        onCreateOrUpdate={onCreateOrUpdate}
+                        onCancel={onCancel}
                       />
                     )}
                     {ui.activeFacilityPage == pages.resources && (
                       <Resources
                         update
                         facility={facility}
-                        onCreateOrUpdate={() =>
-                          history.push(
-                            `/facilities/${id}/${ui.activeFacilityPage}`
-                          )
-                        }
+                        onCreateOrUpdate={onCreateOrUpdate}
+                        onCancel={onCancel}
                       />
                     )}
                     {ui.activeFacilityPage == pages.utilities && (
                       <Utilities
                         update
                         facility={facility}
-                        onCreateOrUpdate={() =>
-                          history.push(
-                            `/facilities/${id}/${ui.activeFacilityPage}`
-                          )
-                        }
+                        onCreateOrUpdate={onCreateOrUpdate}
+                        onCancel={onCancel}
                       />
                     )}
                     {ui.activeFacilityPage == pages.services && (
                       <Services
                         update
                         facility={facility}
-                        onCreateOrUpdate={() =>
-                          history.push(
-                            `/facilities/${id}/${ui.activeFacilityPage}`
-                          )
-                        }
+                        onCreateOrUpdate={onCreateOrUpdate}
+                        onCancel={onCancel}
                       />
                     )}
                   </>

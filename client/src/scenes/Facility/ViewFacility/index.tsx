@@ -36,10 +36,10 @@ const Facility = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (id) {
+    if (id && dependancies.facilityTypes.list.length > 0) {
       dispatch(fetchCurrentFacility(id, dependancies));
     }
-  }, [id]);
+  }, [id, dependancies]);
 
   useEffect(() => {
     if (id) {

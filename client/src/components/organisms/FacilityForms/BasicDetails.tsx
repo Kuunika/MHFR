@@ -27,11 +27,13 @@ import swal from "sweetalert";
 function BasicDetails({
   onCreateOrUpdate,
   update,
-  facility
+  facility,
+  onCancel
 }: {
   onCreateOrUpdate: Function;
   update?: boolean;
   facility?: IFacilityCurrent;
+  onCancel: Function;
 }) {
   const dependancies = useSelector((state: IState) => state.dependancies);
   const auth = useSelector((state: IState) => state.users.currentUser);
@@ -72,8 +74,20 @@ function BasicDetails({
         published_date: facility.published_date || "",
         facility_code_mapping: facility.facility_code_mapping || []
       });
+      return;
     }
-  }, [update, facility]);
+    const defaultStatus = dependancies.regulatoryStatuses.list.find(
+      (r: any) => r.facility_regulatory_status === "Not Registered"
+    );
+    const defaultType = dependancies.facilityTypes.list.find(
+      (r: any) => r.facility_type === "Unclassified"
+    );
+    setInitialValues({
+      ...initialValues,
+      facility_type_id: defaultType?.id || "",
+      facility_regulatory_status_id: defaultStatus?.id || ""
+    });
+  }, [update, facility, dependancies]);
 
   const isDisabled = (action: acActions): boolean => {
     const role = getUser().role;
@@ -170,7 +184,6 @@ function BasicDetails({
     createFacility(values, { setSubmitting, resetForm });
   };
 
-  const onCancel = () => {};
   return (
     <Paper>
       <Formik

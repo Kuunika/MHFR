@@ -18,11 +18,13 @@ import swal from "sweetalert";
 function ContactDetails({
   facility,
   update,
-  onCreateOrUpdate
+  onCreateOrUpdate,
+  onCancel
 }: {
   update?: boolean;
   facility: IFacilityCurrent | null;
   onCreateOrUpdate: Function;
+  onCancel: Function;
 }) {
   const auth = useSelector((state: IState) => state.users.currentUser);
   const [initialValues, setInitialValues] = useState({
@@ -135,8 +137,6 @@ function ContactDetails({
     }
     createContactDetails(values, { setSubmitting, resetForm });
   };
-
-  const onCancel = () => {};
 
   const setCoordinates = (
     position: { lat: any; lng: any },

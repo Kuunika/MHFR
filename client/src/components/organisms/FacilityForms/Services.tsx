@@ -21,11 +21,13 @@ import { getServices } from "../../../scenes/Facility/CreateFacility/helpers";
 function Services({
   facility,
   update,
-  onCreateOrUpdate
+  onCreateOrUpdate,
+  onCancel
 }: {
   update?: boolean;
   facility: IFacilityCurrent | null;
   onCreateOrUpdate: Function;
+  onCancel: Function;
 }) {
   const [initialValues, setInitialValues] = useState({ services: [] } as any);
   const { services } = useSelector((state: IState) => state.dependancies);
@@ -161,7 +163,7 @@ function Services({
     }
     createServices(values, { setSubmitting, resetForm });
   };
-  const onCancel = () => {};
+
   return (
     <Paper>
       <Formik
@@ -258,10 +260,12 @@ function Services({
                                 values.services.includes(ser.id)
                             )
                             .map((service: any) => (
-                              <Chip
-                                key={service.service_name}
-                                label={service.service_name}
-                              />
+                              <div style={{ margin: "0.2rem" }}>
+                                <Chip
+                                  key={service.service_name}
+                                  label={service.service_name}
+                                />
+                              </div>
                             ))}
                         </Grid>
                       </div>
