@@ -5,7 +5,6 @@ var rolePermissions = require("../../data/role-permissions");
 
 
 
-
 module.exports = function () {
   return async function acl(req, res, next) {
     const accessTokenModel = app.models.AccessToken;
@@ -46,6 +45,8 @@ module.exports = function () {
       userRoles = await Promise.all(
         roleMappings.map(roleMap => roleModel.findById(roleMap.roleId))
       );
+
+
 
 
       if (checkPermission("all", model, method, req, userInstance.id, userRoles)) {
@@ -111,10 +112,13 @@ const checkPermission = (role, model, method, req, loggedUserId = 0, userRoles =
     rolePermissions => rolePermissions.role === role
   );
 
+
+
   if (!rolePermission) {
     return false;
   }
   const roleModel = rolePermission.acls.find(acl => acl.model === model);
+
 
   if (!roleModel) {
     return false;
@@ -155,7 +159,7 @@ const checkPermission = (role, model, method, req, loggedUserId = 0, userRoles =
     ];
   }
 
-
+  console.log(roleMethod)
 
   return roleMethod.permissions.find(permission => permission === req.method);
 };
