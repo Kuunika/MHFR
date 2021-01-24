@@ -292,7 +292,7 @@ export const putBasicDetails = (
       Authorization: `${token}`
     }
   };
-  return axios.put(url, data, header);
+  return axios.patch(url, data, header);
 };
 
 export const putContactDetails = (data: any, token: string) => {

@@ -7,7 +7,11 @@ import {
 import { uniqWith, isEqual } from "lodash";
 import { check } from "../../../components/atoms/Ac";
 
-export const getAuthorizedBasicDetails = (data: any, userRole: string) => {
+export const getAuthorizedBasicDetails = (
+  data: any,
+  userRole: string,
+  create = true
+) => {
   let value = {
     facility_name: data.facility_name,
     common_name: data.common_name,
@@ -20,16 +24,23 @@ export const getAuthorizedBasicDetails = (data: any, userRole: string) => {
     updated_at: Date.now()
   } as any;
 
-  if (check(undefined, userRole, "facility:basic_details:facility_type")) {
+  if (
+    create ||
+    check(undefined, userRole, "facility:basic_details:facility_type")
+  ) {
     value = { ...value, facility_type_id: data.facility_type_id };
   }
-  if (check(undefined, userRole, "facility:basic_details:licensing_status")) {
+  if (
+    create ||
+    check(undefined, userRole, "facility:basic_details:licensing_status")
+  ) {
     value = {
       ...value,
       facility_regulatory_status_id: data.facility_regulatory_status_id
     };
   }
   if (
+    create ||
     check(undefined, userRole, "facility:basic_details:registration_number")
   ) {
     value = { ...value, registration_number: data.registration_number };
@@ -78,36 +89,44 @@ export const getResources = (
   allResources: any,
   facilityId: number
 ) =>
-  allResources.map((resource: any) => ({
-    facility_id: facilityId,
-    client_id: 1,
-    resource_id: resource.id,
-    quantity:
-      typeof data[`resource_${resource.id}`] !== "undefined"
-        ? Number(data[`resource_${resource.id}`])
-        : 0,
-    description: "",
-    created_date: new Date()
-  }));
+  allResources.map((resource: any) => {
+    const created_date = new Date();
+    return {
+      facility_id: facilityId,
+      client_id: 1,
+      resource_id: resource.id,
+      quantity:
+        typeof data[`resource_${resource.id}`] !== "undefined"
+          ? Number(data[`resource_${resource.id}`])
+          : 0,
+      description: "",
+      created_date
+    };
+  });
 
-export const getUtilities = (data: any = [], facilityId: number) =>
-  data.map((utility: any) => ({
+export const getUtilities = (data: any = [], facilityId: number) => {
+  const created_date = new Date();
+
+  return data.map((utility: any) => ({
     facility_id: facilityId,
     utility_id: utility,
     client_id: 1,
-    created_date: new Date()
+    created_date
   }));
+};
 
 export const getServices = (
   data: any,
   facilityId: number,
   allServices: Array<any>
 ) => {
+  const created_date = new Date();
   return uniqWith(
     getServicesFromLeavesForPost(data, allServices).map((ser: any) => ({
-      service_id: ser.id,
+      service_id: ser,
       facility_id: facilityId,
-      client_id: 1
+      client_id: 1,
+      created_date
     })),
     isEqual
   );

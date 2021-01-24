@@ -23,7 +23,6 @@ import ContactDetails from "../../../components/organisms/FacilityForms/ContactD
 import Resources from "../../../components/organisms/FacilityForms/Resources";
 import Utilities from "../../../components/organisms/FacilityForms/Utilities";
 import Services from "../../../components/organisms/FacilityForms/Services";
-import { getCurrentFacility } from "../../../services/api";
 
 const API = process.env.REACT_APP_API_URL;
 
@@ -95,7 +94,7 @@ function UpdateFacility() {
   };
 
   const onCreateOrUpdate = () => {
-    dispatch(getCurrentFacility(facility.id));
+    dispatch(fetchCurrentFacility(facility.id, dependancies));
     history.push(`/facilities/${id}/${ui.activeFacilityPage}`);
   };
 

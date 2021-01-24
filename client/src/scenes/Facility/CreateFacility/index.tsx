@@ -64,7 +64,7 @@ function CreateFacility() {
             ...state,
             facility: unfinishedFacility,
             activeForm:
-              (localStorage.getItem("ew_facility_active_form") as IForms) ||
+              (localStorage.getItem("new_facility_active_form") as IForms) ||
               "Basic Details"
           });
           return;

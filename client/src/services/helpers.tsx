@@ -1,7 +1,7 @@
 import React from "react";
 import { MenuItem } from "@material-ui/core";
 // @ts-ignore
-import { intersection, slice, uniqWith } from "lodash";
+import { intersection, slice, uniqWith, uniq } from "lodash";
 import store from "../services/redux/store.js";
 import {
   IService,
@@ -139,20 +139,17 @@ export const getServicesFromLeavesForPost = (
           : [
               ...accServices,
               leaf,
-              ...getServicesFromLeaves(
-                allServices.filter(
-                  ser => ser.id == currentService?.service_category_id
-                ),
+              ...getServicesFromLeavesForPost(
+                allServices
+                  .filter(ser => ser.id == currentService?.service_category_id)
+                  .map(s => s.id),
                 allServices,
                 accServices
               )
             ];
     }
   }
-  return uniqWith(
-    accServices,
-    (curSer: any, nextSer: any) => curSer.id == nextSer.id
-  );
+  return uniq(accServices);
 };
 
 export const getServicesFromLeaves = (

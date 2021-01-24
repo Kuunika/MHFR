@@ -139,7 +139,7 @@ function BasicDetails({
         if (res && facility && facility.id) {
           setSubmitting(true);
           putBasicDetails(
-            getAuthorizedBasicDetails(values, getUser().role),
+            getAuthorizedBasicDetails(values, getUser().role, false),
             facility.id,
             token as any
           )
@@ -147,7 +147,7 @@ function BasicDetails({
               toast.info(
                 <Notification message="Facility Updated Successfully" />
               );
-              onCreateOrUpdate();
+              onCreateOrUpdate(facility);
             })
             .catch(() => {
               toast.info(
