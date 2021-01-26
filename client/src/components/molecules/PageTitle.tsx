@@ -1,8 +1,10 @@
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import styled from "styled-components";
 
 function index(props: Props) {
-  const { icon, title, options, sub } = props;
+  const { icon, title, options, sub, approved } = props;
   return (
     <Container>
       <TitleContainer>
@@ -10,6 +12,11 @@ function index(props: Props) {
         <div>
           {title && title.toUpperCase()}
           {sub ? <SubTitle>{` (${sub})`}</SubTitle> : ""}
+          {approved && (
+            <span style={{ marginLeft: "1rem", color: "#40c140" }}>
+              <FontAwesomeIcon icon={faCheckCircle}></FontAwesomeIcon>
+            </span>
+          )}
         </div>
       </TitleContainer>
       {options && <div>{options}</div>}
@@ -22,6 +29,7 @@ type Props = {
   sub?: string;
   icon: any;
   options?: any;
+  approved?: boolean;
 };
 
 const Container = styled.div`

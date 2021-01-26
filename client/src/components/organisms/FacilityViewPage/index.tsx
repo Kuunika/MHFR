@@ -21,6 +21,7 @@ import { isLoggedIn, getUser } from "../../../services/helpers";
 import EmptyState from "../../atoms/FacilityDetailsEmptyState";
 import Ac from "../../atoms/Ac";
 import { acActions } from "../../../acl";
+import { IFacilityCurrent } from "../../../services/types";
 
 library.add(faHospital, faEdit);
 
@@ -53,8 +54,12 @@ function index(props: Props) {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12} md={12}>
           <Title
-            title={basic.facility_name}
+            title={basic.facility_name || ""}
             sub={basic.common_name ? basic.common_name : ""}
+            approved={
+              basic.registration_number != null &&
+              basic.registration_number.length > 0
+            }
             icon={<FontAwesomeIcon icon={faHospital} />}
             options={
               <Ac
@@ -173,7 +178,7 @@ type Props = {
   archiveFacility: Function;
   activePage: string;
   pageHeader: string;
-  basic: any;
+  basic: IFacilityCurrent;
   resources: Array<any>;
   services: Array<any>;
   utilities: Array<any>;

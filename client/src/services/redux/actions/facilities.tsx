@@ -256,12 +256,14 @@ export const basicAdvancedFilter = (filterValues: Array<any>) => {
   const rangeFilter = filterValues
     .filter(filter => filter.type == "lastUpdatedRange")
     .map(opt => {
-      return {
-        and: [
-          { updated_at: { gte: new Date(opt.range[0]) } },
-          { updated_at: { lt: new Date(opt.range[1]) } }
-        ]
-      };
+      return opt.values
+        ? {
+            and: [
+              { updated_at: { gte: new Date(opt?.values[0]) } },
+              { updated_at: { lt: new Date(opt?.values[1]) } }
+            ]
+          }
+        : {};
     });
 
   const FILTER = {
