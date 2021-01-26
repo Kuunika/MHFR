@@ -1,6 +1,6 @@
 "use strict";
 
-const { object } = require("joi");
+
 
 // corresponds to request methods
 const operations = {
@@ -223,6 +223,14 @@ const rolePermissions = [
               operations.UPDATE,
               operations.WRITE
             ]
+          },
+          {
+            method: "contactDetails",
+            permissions: [
+              operations.DELETE,
+              operations.READ,
+              operations.UPDATE,
+              operations.WRITE]
           },
           {
             method: "services",
@@ -748,3 +756,21 @@ const rolePermissions = [
 ];
 
 module.exports = rolePermissions;
+
+
+
+// { data:
+//   { physicalAddress: 'Kuunika',
+//     postalAddress: 'p.o. box 1234, Kuunika',
+//     contactName: 'John Bands',
+//     contactPhoneNumber: '0111234567',
+//     contactEmail: 'johnbanda@kuunika.org',
+//     catchmentArea: 'urban',
+//     catchmentPopulation: '0',
+//     longitude: '33.885631',
+//     latitude: '-13.797421',
+//     client: 1,
+//     updated_at: 1611138268066 },
+//  id: 2 }
+
+// 1560
