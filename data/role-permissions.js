@@ -1,7 +1,5 @@
 "use strict";
 
-
-
 // corresponds to request methods
 const operations = {
   WRITE: "POST",
@@ -212,7 +210,8 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE
+              operations.WRITE,
+              operations.PATCH
             ]
           },
           {
@@ -221,7 +220,8 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE
+              operations.WRITE,
+              operations.PATCH
             ]
           },
           {
@@ -230,7 +230,9 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE]
+              operations.WRITE,
+              operations.PATCH
+            ]
           },
           {
             method: "services",
@@ -274,7 +276,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permissions: [operations.UPDATE, operations.WRITE]
+            permissions: [operations.UPDATE, operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -288,7 +290,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permissions: [operations.WRITE, operations.UPDATE]
+            permissions: [operations.WRITE, operations.UPDATE, operations.PATCH]
           }
         ]
       },
@@ -297,11 +299,16 @@ const rolePermissions = [
         methods: [
           {
             method: "*",
-            permissions: [operations.READ, operations.UPDATE, operations.WRITE]
+            permissions: [
+              operations.READ,
+              operations.UPDATE,
+              operations.WRITE,
+              operations.PATCH
+            ]
           },
           {
             method: "replaceOrCreate",
-            permissions: [operations.UPDATE, operations.WRITE]
+            permissions: [operations.UPDATE, operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -367,7 +374,7 @@ const rolePermissions = [
         methods: [
           {
             method: "*",
-            permissions: [operations.UPDATE]
+            permissions: [operations.UPDATE, operations.PATCH]
           }
         ]
       }
@@ -394,7 +401,8 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE
+              operations.WRITE,
+              operations.PATCH
             ]
           },
           {
@@ -403,7 +411,8 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE
+              operations.WRITE,
+              operations.PATCH
             ]
           },
 
@@ -450,11 +459,16 @@ const rolePermissions = [
         methods: [
           {
             method: "*",
-            permissions: [operations.READ, operations.UPDATE, operations.WRITE]
+            permissions: [
+              operations.READ,
+              operations.UPDATE,
+              operations.WRITE,
+              operations.PATCH
+            ]
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -467,7 +481,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -480,7 +494,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       }
@@ -512,7 +526,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -554,7 +568,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -594,7 +608,8 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE
+              operations.WRITE,
+              operations.PATCH
             ]
           }
         ]
@@ -608,7 +623,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -621,7 +636,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -634,7 +649,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       }
@@ -660,7 +675,8 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE
+              operations.WRITE,
+              operations.PATCH
             ]
           },
           {
@@ -678,7 +694,8 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE
+              operations.WRITE,
+              operations.PATCH
             ]
           },
           {
@@ -687,7 +704,8 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE
+              operations.WRITE,
+              operations.PATCH
             ]
           },
           {
@@ -711,7 +729,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -724,7 +742,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -738,7 +756,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -756,8 +774,6 @@ const rolePermissions = [
 ];
 
 module.exports = rolePermissions;
-
-
 
 // { data:
 //   { physicalAddress: 'Kuunika',
