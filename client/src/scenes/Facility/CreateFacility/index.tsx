@@ -81,10 +81,15 @@ function CreateFacility() {
 
   const onSubmitDetails = (facility: any, nextForm: IForms) => {
     if (nextForm == "Contacts & Location") {
-      setState({ ...state, facility });
+      setState({ ...state, facility: facility, activeForm: nextForm });
+      localStorage.setItem("new_facility_active_form", nextForm);
       localStorage.setItem("new_facility_details", JSON.stringify(facility));
+      return;
     }
     setActiveForm(nextForm);
+    if (nextForm == "Finish") {
+      localStorage.clear();
+    }
   };
 
   const onCancel = () => {
