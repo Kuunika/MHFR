@@ -31,10 +31,10 @@ describe("Update Facility Services", () => {
     cy.window().then(win => {
       win.sessionStorage.clear();
       win.localStorage.clear();
-      win.localStorage.setItem("new_facility_active_tab", `Services`);
+      win.localStorage.setItem("new_facility_active_form", `Services`);
       win.localStorage.setItem(
-        "new_facility",
-        `{"details":{"facilityName":"kuunika"}}`
+        "new_facility_details",
+        JSON.stringify({ facility_name: "kuunika", id: 1 })
       );
     });
     cy.fetch_service_types().then(serviceTypesData => {
@@ -44,10 +44,10 @@ describe("Update Facility Services", () => {
 
   beforeEach(() => {
     cy.window().then(win => {
-      win.localStorage.setItem("new_facility_active_tab", `Services`);
+      win.localStorage.setItem("new_facility_active_form", `Services`);
       win.localStorage.setItem(
-        "new_facility",
-        `{"details":{"facilityName":"kuunika"}}`
+        "new_facility_details",
+        JSON.stringify({ facility_name: "kuunika", id: 1 })
       );
     });
   });
@@ -152,10 +152,10 @@ describe("Update Facility Services", () => {
         .first()
         .click();
 
-      cy.wait("@basics");
-      cy.wait("@contacts");
+      // cy.wait("@basics");
+      // cy.wait("@contacts");
       cy.wait("@services");
-      cy.wait("@publish");
+      // cy.wait("@publish");
 
       cy.get("@services").then(xhr => {
         const { body } = xhr.request;

@@ -87,17 +87,17 @@ describe("Add Facility Basics", () => {
 
   context("Validates input in front-end", () => {
     it("Validates facility name", () => {
-      type("facilityName", "ku");
+      type("facility_name", "ku");
 
-      cy.get(`[data-test=fieldErrorfacilityName`)
+      cy.get(`[data-test=fieldErrorfacility_name`)
         .first()
         .should("be.visible")
         .contains(errors.facilityName);
     });
     it("Validates facility common name", () => {
-      type("commonName", "ku");
+      type("common_name", "ku");
 
-      cy.get(`[data-test=fieldErrorcommonName]`)
+      cy.get(`[data-test=fieldErrorcommon_name]`)
         .first()
         .should("be.visible")
         .contains(errors.facilityCommon);
@@ -124,9 +124,9 @@ describe("Add Facility Basics", () => {
     });
 
     it("Validates Registration", () => {
-      type("registrationNumber", "1");
+      type("registration_number", "1");
 
-      cy.get(`[data-test=fieldErrorregistrationNumber]`)
+      cy.get(`[data-test=fieldErrorregistration_number]`)
         .first()
         .should("be.visible")
         .contains(errors.registrationNumber);
@@ -135,13 +135,13 @@ describe("Add Facility Basics", () => {
 
   context("Adds Facility Basics", () => {
     it("Successfully Adds Facility Basics", () => {
-      cy.get("input[name='facilityName']")
+      cy.get("input[name='facility_name']")
         .first()
         .click()
         .clear()
         .type("kuunika");
 
-      cy.get("input[name='commonName']")
+      cy.get("input[name='common_name']")
         .first()
         .click()
         .clear()
@@ -157,7 +157,7 @@ describe("Add Facility Basics", () => {
 
       selectFirst("district");
 
-      cy.get("input[name='registrationNumber']")
+      cy.get("input[name='registration_number']")
         .first()
         .click()
         .clear()

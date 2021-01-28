@@ -186,6 +186,7 @@ function Services({
                   {services.types.map((type: any) => (
                     <Grid item xs={12} sm={12} md={12} xl={12}>
                       <h3
+                        id={`menu-${type.service_type.replace(/ /g, "")}`}
                         onClick={() => onClickServiceType(type.id)}
                         style={{
                           display: "flex",
@@ -346,6 +347,7 @@ const LastChildNode = ({
     <div style={{ marginLeft: "1rem", display: "flex", alignItems: "center" }}>
       <div style={{ marginRight: "0.5rem", marginLeft: "-9px" }}>
         <Checkbox
+          data-test={`check${service.service_type_id + "".replace(/ /g, "")}`}
           value={`${service.id}`}
           checked={checked}
           onChange={() => onClick(service.id)}
