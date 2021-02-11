@@ -41,7 +41,7 @@ export const getAdvancedBasicFilter = (filterValues: Array<IFilterValues>) => {
               { updated_at: { lt: new Date(opt?.values[1]) } }
             ]
           }
-        : {};
+        : [];
     });
 
   return {
@@ -76,7 +76,7 @@ export const getAdvancedResourcesFilter = (
                   { quantity: { lte: filterValue.values[1] } }
                 ]
               }
-            : {};
+            : [];
         })
       : [];
 

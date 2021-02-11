@@ -2,8 +2,10 @@ import axios from "axios";
 import {
   getAdvancedBasicFilter,
   getAdvancedResourcesFilter,
+  getServicesAdvancedFilter,
   getUtilitiesAdvancedFilter
 } from "../scenes/Facility/helpers";
+import { hasFilterValuesForType } from "./helpers";
 import { IFilterValues } from "./types";
 
 const API = process.env.REACT_APP_API_URL;
@@ -12,7 +14,42 @@ export const getFilteredFacilities = (filterValues: Array<IFilterValues>) => {
   const basicFilter = getAdvancedBasicFilter(filterValues);
   const resourcesFilter = getAdvancedResourcesFilter(filterValues);
   const utilitiesFilter = getUtilitiesAdvancedFilter(filterValues);
+  const servicesFilter = getServicesAdvancedFilter(filterValues);
+  let uris: any = [];
+  uris = hasFilterValuesForType("basic", filterValues)
+    ? [
+        ...uris,
+        axios.get(`${API}/Facilities?filter=${JSON.stringify(basicFilter)}`)
+      ]
+    : uris;
+  uris = hasFilterValuesForType("resources", filterValues)
+    ? [
+        ...uris,
+        axios.get(
+          `${API}/FacilityResources?filter=${JSON.stringify(resourcesFilter)}`
+        )
+      ]
+    : uris;
+  uris = hasFilterValuesForType("utilities", filterValues)
+    ? [
+        ...uris,
+        axios.get(
+          `${API}/FacilityUtilities?filter=${JSON.stringify(utilitiesFilter)}`
+        )
+      ]
+    : uris;
+  uris = hasFilterValuesForType("utilities", filterValues)
+    ? [
+        ...uris,
+        axios.get(
+          `${API}/FacilityServices?filter=${JSON.stringify(servicesFilter)}`
+        )
+      ]
+    : uris;
+
+  return axios.all(uris);
 };
+
 export const getDependancies = () => {
   const uris = [
     axios.get(`${API}/Utilities`),

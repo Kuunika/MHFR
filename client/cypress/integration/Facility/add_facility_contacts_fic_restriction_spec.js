@@ -17,6 +17,7 @@ const hasError = (fieldName, error) => {
 
 describe("Add Facility Contacts", () => {
   const FRONTEND_URL = Cypress.env("FRONT_END_URL");
+  const BACKEND_URL = Cypress.env("API_URL");
 
   var details = {
     postalAddress: "P.O.Box 1",
@@ -52,20 +53,24 @@ describe("Add Facility Contacts", () => {
       win.sessionStorage.clear();
       win.localStorage.clear();
       win.localStorage.setItem(
-        "new_facility_active_tab",
+        "new_facility_active_form",
         `Contacts & Location`
       );
       win.localStorage.setItem(
-        "new_facility",
-        `{"details":{"facilityName":"kuunika"}}`
+        "new_facility_details",
+        JSON.stringify({ facility_name: "kuunika", id: 1 })
       );
     });
   });
   beforeEach(() => {
     cy.window().then(win => {
       win.localStorage.setItem(
-        "new_facility_active_tab",
+        "new_facility_active_form",
         `Contacts & Location`
+      );
+      win.localStorage.setItem(
+        "new_facility_details",
+        JSON.stringify({ facility_name: "kuunika", id: 1 })
       );
     });
   });
@@ -90,44 +95,44 @@ describe("Add Facility Contacts", () => {
 
   context("Validates input in front-end", () => {
     it("Validates postal address", () => {
-      type("postalAddress", "ku");
+      type("postal_address", "ku");
 
-      hasError("postalAddress", errors.postalAddress);
+      hasError("postal_address", errors.postalAddress);
     });
 
     it("Validates physical address", () => {
-      type("physicalAddress", "ku");
+      type("physical_address", "ku");
 
-      hasError("physicalAddress", errors.physicalAddress);
+      hasError("physical_address", errors.physicalAddress);
     });
 
     it("Validates contact name", () => {
-      type("contactName", "ku");
+      type("contact_person_fullname", "ku");
 
-      hasError("contactName", errors.contactName);
+      hasError("contact_person_fullname", errors.contactName);
     });
 
     it("Validates phone", () => {
-      type("contactPhoneNumber", "ku");
+      type("contact_person_phone", "ku");
 
-      hasError("contactPhoneNumber", errors.contactPhoneNumber);
+      hasError("contact_person_phone", errors.contactPhoneNumber);
     });
 
     it("Validates email", () => {
-      type("contactEmail", "ku");
+      type("contact_person_email", "ku");
 
-      hasError("contactEmail", errors.contactEmail);
+      hasError("contact_person_email", errors.contactEmail);
     });
 
     it("Validates catchment area", () => {
-      type("catchmentArea", "ku");
+      type("catchment_area", "ku");
 
-      hasError("catchmentArea", errors.catchmentArea);
+      hasError("catchment_area", errors.catchmentArea);
     });
     it("Validates catchment area population", () => {
-      type("catchmentPopulation", "ty");
+      type("catchment_population", "ty");
 
-      hasError("catchmentPopulation", errors.catchmentPopulation);
+      hasError("catchment_population", errors.catchmentPopulation);
     });
     it("Validates latitude", () => {
       type("latitude", "1");
@@ -144,13 +149,21 @@ describe("Add Facility Contacts", () => {
 
   context("Adds Facility Contacts And Locations", () => {
     it("Successfully Adds Contacts And Locations", () => {
-      type("postalAddress", details.postalAddress);
-      type("physicalAddress", details.physicalAddress);
-      type("contactName", details.contactName);
-      type("contactPhoneNumber", details.contactPhoneNumber);
-      type("contactEmail", details.contactEmail);
-      type("catchmentArea", details.catchmentArea);
-      type("catchmentPopulation", details.catchmentPopulation);
+      cy.server({
+        status: 200
+      });
+      cy.route(
+        "POST",
+        `${BACKEND_URL}/Facilities/contactDetails`,
+        "fixture:add_facility_basics_success.json"
+      ).as("contacts");
+      type("postal_address", details.postalAddress);
+      type("physical_address", details.physicalAddress);
+      type("contact_person_fullname", details.contactName);
+      type("contact_person_phone", details.contactPhoneNumber);
+      type("contact_person_email", details.contactEmail);
+      type("catchment_area", details.catchmentArea);
+      type("catchment_population", details.catchmentPopulation);
 
       type("longitude", details.longitude);
 
@@ -159,13 +172,13 @@ describe("Add Facility Contacts", () => {
       cy.get("[data-test='saveBtn']")
         .first()
         .click();
-
-      cy.fetch_add_facility().then(facility => {
-        let facilityContacts = facility.contact;
-        cy.expect(facilityContacts).to.deep.equal({
-          ...details
-        });
-      });
+      cy.wait("@contacts");
+      // cy.fetch_add_facility().then(facility => {
+      //   let facilityContacts = facility.contact;
+      //   cy.expect(facilityContacts).to.deep.equal({
+      //     ...details
+      //   });
+      // });
     });
   });
 });

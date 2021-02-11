@@ -238,7 +238,7 @@ function BasicDetails({
                         "facility:basic_details:facility_type"
                       )}
                       name="facility_type_id"
-                      data-test="facilityType"
+                      data-test="facility_type_id"
                       value={values.facility_type_id}
                       onBlur={handleBlur}
                       error={
@@ -265,7 +265,7 @@ function BasicDetails({
                   <FormControl className="mfl-max-width">
                     <Select
                       disabled={isDisabled("facility:basic_details:create")}
-                      data-test="operationalStatus"
+                      data-test="facility_operational_status_id"
                       name="facility_operational_status_id"
                       onBlur={handleBlur}
                       error={
@@ -285,7 +285,7 @@ function BasicDetails({
                       touched.facility_operational_status_id && (
                         <InputError
                           error={errors.facility_operational_status_id}
-                          for="operationalStatus"
+                          for="facility_operational_status_id"
                         />
                       )}
                   </FormControl>
@@ -318,7 +318,7 @@ function BasicDetails({
                       touched.facility_regulatory_status_id && (
                         <InputError
                           error={errors.facility_regulatory_status_id}
-                          for="regulatoryStatus"
+                          for="facility_regulatory_status_id"
                         />
                       )}
                   </FormControl>
@@ -328,7 +328,7 @@ function BasicDetails({
                   <FormControl className="mfl-max-width">
                     <Select
                       disabled={isDisabled("facility:basic_details:create")}
-                      data-test="facilityOwner"
+                      data-test="facility_owner_id"
                       name="facility_owner_id"
                       onBlur={handleBlur}
                       error={
@@ -347,7 +347,7 @@ function BasicDetails({
                     {errors.facility_owner_id && touched.facility_owner_id && (
                       <InputError
                         error={errors.facility_owner_id}
-                        for="facility_owner"
+                        for="facility_owner_id"
                       />
                     )}
                   </FormControl>
@@ -357,7 +357,7 @@ function BasicDetails({
                   <FormControl className="mfl-max-width">
                     <Select
                       disabled={isDisabled("facility:basic_details:create")}
-                      data-test="district"
+                      data-test="district_id"
                       onBlur={handleBlur}
                       name="district_id"
                       error={
@@ -372,7 +372,10 @@ function BasicDetails({
                       )}
                     </Select>
                     {errors.district_id && touched.district_id && (
-                      <InputError error={errors.district_id} for="district" />
+                      <InputError
+                        error={errors.district_id}
+                        for="district_id"
+                      />
                     )}
                   </FormControl>
                 </Grid>

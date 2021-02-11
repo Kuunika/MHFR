@@ -39,6 +39,7 @@ const selectFirst = fieldName => {
 
 describe("Add Facility Basics", () => {
   const FRONTEND_URL = Cypress.env("FRONT_END_URL");
+  const BACKEND_URL = Cypress.env("API_URL");
 
   var details = {
     commonName: "kuunika",
@@ -108,7 +109,7 @@ describe("Add Facility Basics", () => {
     // });
 
     it("Validates Operational Status", () => {
-      validateSelect("operationalStatus", errors.empty);
+      validateSelect("facility_operational_status_id", errors.empty);
     });
 
     // it("Validates regulatory status", () => {
@@ -116,25 +117,37 @@ describe("Add Facility Basics", () => {
     // });
 
     it("Validates facility owner", () => {
-      validateSelect("facilityOwner", errors.empty);
+      validateSelect("facility_owner_id", errors.empty);
     });
 
     it("Validates district", () => {
-      validateSelect("district", errors.empty);
+      validateSelect("district_id", errors.empty);
     });
 
-    it("Validates Registration", () => {
-      type("registration_number", "1");
+    // it("Validates Registration", () => {
+    //   type("registration_number", "1");
 
-      cy.get(`[data-test=fieldErrorregistration_number]`)
-        .first()
-        .should("be.visible")
-        .contains(errors.registrationNumber);
-    });
+    //   cy.get(`[data-test=fieldErrorregistration_number]`)
+    //     .first()
+    //     .should("be.visible")
+    //     .contains(errors.registrationNumber);
+    // });
   });
 
   context("Adds Facility Basics", () => {
     it("Successfully Adds Facility Basics", () => {
+      cy.server({
+        status: 200
+      });
+      cy.route(
+        "POST",
+        `${BACKEND_URL}/Facilities`,
+        "fixture:add_facility_basics_success.json"
+      ).as("basics");
+      cy.route("POST", `${BACKEND_URL}/Facilities/publish`, {
+        success: "done"
+      }).as("publish");
+
       cy.get("input[name='facility_name']")
         .first()
         .click()
@@ -147,29 +160,32 @@ describe("Add Facility Basics", () => {
         .clear()
         .type("kuunika");
 
-      selectFirst("facilityType");
+      selectFirst("facility_type_id");
 
-      selectFirst("operationalStatus");
+      selectFirst("facility_operational_status_id");
 
-      selectFirst("regulatoryStatus");
+      // selectFirst("facility_regulatory_status");
 
-      selectFirst("facilityOwner");
+      selectFirst("facility_owner_id");
 
-      selectFirst("district");
+      selectFirst("district_id");
 
-      cy.get("input[name='registration_number']")
-        .first()
-        .click()
-        .clear()
-        .type("11111111");
+      // cy.get("input[name='registration_number']")
+      //   .first()
+      //   .click()
+      //   .clear()
+      //   .type("11111111");
 
       cy.get("[data-test='saveBtn']")
         .first()
         .click();
+
+      cy.wait("@basics");
+      cy.wait("@publish");
+
       cy.window().then(win => {
-        let facility = JSON.parse(win.localStorage.new_facility);
-        let facilityDetails = facility.details;
-        assert.notDeepEqual(facilityDetails, {
+        let facility = JSON.parse(win.localStorage.new_facility_details);
+        assert.notDeepEqual(facility, {
           ...details
         });
       });

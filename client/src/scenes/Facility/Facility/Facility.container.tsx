@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { getFilteredFacilities } from "../../../services/api";
 import { hasFilterValuesForType } from "../../../services/helpers";
 import FacilityView from "./Facility.view";
 
@@ -96,6 +97,17 @@ function FacilityContainer(props: Props) {
   };
 
   const filterFacilities = async () => {
+    getFilteredFacilities(filterOptions).then((r: any) => {
+      console.log(r);
+      const type =
+        r.length > 1
+          ? r[1].config.url
+              .split("/")
+              [r[1].config.url.split("/").length - 1].split("?")[0]
+              .toLowerCase()
+          : "";
+      console.log(type);
+    });
     if (hasFilterValuesForType("basic", filterOptions))
       await basicAdvancedFilter(filterOptions);
 

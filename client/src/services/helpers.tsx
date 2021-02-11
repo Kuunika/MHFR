@@ -9,7 +9,8 @@ import {
   IFacilityCurrent,
   IFacilityType,
   IServiceCurrent,
-  IServiceType
+  IServiceType,
+  IFilterTypes
 } from "./types/index.js";
 
 export const renderOptions = (
