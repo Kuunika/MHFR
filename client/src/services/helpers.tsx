@@ -198,7 +198,10 @@ export const groupIntersect: any = (val: Array<any>) => {
   );
 };
 
-export const hasFilterValuesForType = (type: string, values: Array<any>) => {
+export const hasFilterValuesForType = (
+  type: string | IFilterTypes,
+  values: Array<any>
+) => {
   switch (type) {
     case "basic":
       return (
