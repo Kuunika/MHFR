@@ -174,7 +174,7 @@ module.exports = Facility => {
   Facility.updateContactDetails = async (data, id, cb) => {
     const where = { facility_id: id };
     const { Address, ContactPeople, Location, Geolocation } = server.models;
-
+    console.log({ data, id });
     const foundAddress = await Address.findOne({
       where
     }).catch(err => cb(err.message));
@@ -328,12 +328,12 @@ module.exports = Facility => {
     // TODO: Handle Blank Regex
     return regex
       ? formattedFacilities
-        .filter(facility => {
-          return new RegExp(`.*${regex.toUpperCase()}`).test(
-            facility.string.toUpperCase()
-          );
-        })
-        .filter((facility, index) => index < 5)
+          .filter(facility => {
+            return new RegExp(`.*${regex.toUpperCase()}`).test(
+              facility.string.toUpperCase()
+            );
+          })
+          .filter((facility, index) => index < 5)
       : formattedFacilities;
   };
 
@@ -371,11 +371,16 @@ module.exports = Facility => {
     returns: { arg: "response", type: "string" }
   });
 
-  Facility.remoteMethod('findByCode', {
-    description: 'Fetch facility by code.',
-    accepts: [{ arg: 'code', type: 'string' }],
-    http: { path: '/findByCode/:code', verb: 'get', errorStatus: 404, status: 200 },
-    returns: { root: true, type: 'Facility' },
+  Facility.remoteMethod("findByCode", {
+    description: "Fetch facility by code.",
+    accepts: [{ arg: "code", type: "string" }],
+    http: {
+      path: "/findByCode/:code",
+      verb: "get",
+      errorStatus: 404,
+      status: 200
+    },
+    returns: { root: true, type: "Facility" }
   });
 
   Facility.findByCode = async (code, cb) => {
@@ -384,8 +389,7 @@ module.exports = Facility => {
     } catch (error) {
       cb(error);
     }
-  }
-
+  };
 
   Facility.downloadFacility = async (id, cb) => {
     try {
@@ -788,40 +792,43 @@ module.exports = Facility => {
     returns: { arg: "response", type: "array" }
   });
 
-
-
   Facility.findBySystem = async (system, code, cb) => {
-
     let facility;
     const query = `SELECT * FROM Facility
                    WHERE  JSON_CONTAINS(LOWER(facility_code_mapping),
-                          LOWER('{"system":"${system.replace(/['"]/g, '')}", "code":"${code.replace(/['"]/g, '')}"}'))`
+                          LOWER('{"system":"${system.replace(
+                            /['"]/g,
+                            ""
+                          )}", "code":"${code.replace(/['"]/g, "")}"}'))`;
 
     try {
       facility = await new Promise((resolve, reject) => {
         Facility.dataSource.connector.query(query, (error, data) => {
           if (error) {
-            reject(error)
+            reject(error);
           }
-          resolve(data[0])
-        })
-      })
-
+          resolve(data[0]);
+        });
+      });
     } catch (error) {
-      cb(error)
-
+      cb(error);
     }
 
-    return facility ?
-      { ...facility, facility_code_mapping: JSON.parse(facility['facility_code_mapping']) }
-      : cb(new Error('Facility not found'))
-  }
-
+    return facility
+      ? {
+          ...facility,
+          facility_code_mapping: JSON.parse(facility["facility_code_mapping"])
+        }
+      : cb(new Error("Facility not found"));
+  };
 
   Facility.remoteMethod("findBySystem", {
-    description: 'retrieve by Facility given system and code',
-    http: { path: '/findBySystem', verb: "get", errorStatus: 404, status: 200 },
-    accepts: [{ arg: 'system', type: 'string', required: true }, { arg: 'code', type: 'string', required: true }],
-    returns: { arg: 'data', type: ['Facility'], root: true }
+    description: "retrieve by Facility given system and code",
+    http: { path: "/findBySystem", verb: "get", errorStatus: 404, status: 200 },
+    accepts: [
+      { arg: "system", type: "string", required: true },
+      { arg: "code", type: "string", required: true }
+    ],
+    returns: { arg: "data", type: ["Facility"], root: true }
   });
 };

@@ -1,3 +1,4 @@
+import { IUsers } from "../../types";
 import actions from "../actions/actions";
 
 const initialState = {
@@ -7,7 +8,7 @@ const initialState = {
     authDetails: JSON.parse(sessionStorage.getItem("user") || "{}"),
     details: JSON.parse(sessionStorage.getItem("user") || "{}")
   }
-};
+} as IUsers;
 export default (
   state = initialState,
   action: { type: string; payload?: any }

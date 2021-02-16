@@ -1,71 +1,55 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import CreateFacility from "./CreateFacility";
-import { fetchOwners } from "../../../services/redux/actions/dependancies";
-import {
-  postFacilityBasicDetails,
-  postFacilityContactDetails,
-  postFacilityResources,
-  postFacilityUtilities,
-  postFacilityServices,
-  publishFacility,
-  fetchFacilities
-} from "../../../services/redux/actions/facilities";
-import {
-  getBasicDetails,
-  getContactDetails,
-  getResources,
-  getUtilities,
-  getServices
-} from "./helpers";
-import { toast } from "react-toastify";
-import Notification from "../../../components/atoms/Notification";
-import RedirectOnMobile from "../../../components/atoms/RedirectOnMobile";
-import swal from "sweetalert";
+import { faHospital } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Ac from "../../../components/atoms/Ac";
+import Container from "../../../components/atoms/Container";
+import RedirectOnMobile from "../../../components/atoms/RedirectOnMobile";
+import PageTitle from "../../../components/molecules/PageTitle";
 import { getUser } from "../../../services/helpers";
+import { IState } from "../../../services/types";
 import Unauthorized from "../../Error/401";
+import Stepper from "../../../components/molecules/AddFacilityStepper";
+import BasicDetails from "../../../components/organisms/FacilityForms/BasicDetails";
+import ContactDetails from "../../../components/organisms/FacilityForms/ContactDetails";
+import Resources from "../../../components/organisms/FacilityForms/Resources";
+import Utilities from "../../../components/organisms/FacilityForms/Utilities";
+import Services from "../../../components/organisms/FacilityForms/Services";
+import FinishWindow from "../../../components/molecules/FacilityAddFinish";
+import swal from "sweetalert";
+import { useHistory } from "react-router-dom";
 
-export class index extends Component<Props> {
-  state = {
-    active: "Basic Details",
-    facility: {
-      details: {},
-      contact: {},
-      resources: [],
-      utilities: [],
-      services: []
-    },
-    newFacility: { id: 1 } as any,
-    networkError: false,
-    networkErrorSavingDetails: [] as Array<any>
-  };
-
-  formSections = [
+export type IForms =
+  | "Basic Details"
+  | "Contacts & Location"
+  | "Resources"
+  | "Utilities"
+  | "Services"
+  | "Finish";
+function CreateFacility() {
+  const [state, setState] = useState({
+    activeForm: "Basic Details" as IForms,
+    facility: null
+  });
+  const history = useHistory();
+  const formSections = [
     "Basic Details",
     "Contacts & Location",
     "Resources",
     "Utilities",
     "Services",
     "Finish"
-  ];
+  ] as Array<IForms>;
 
-  componentDidMount() {
-    this.setInitialState();
-    if (this.props.dependancies.owners.list.length == 0) {
-      this.props.fetchOwners();
-    }
-  }
-
-  setInitialState = async () => {
-    if (await localStorage.getItem("new_facility")) {
-      let facility: any = JSON.parse((await localStorage.getItem(
-        "new_facility"
-      )) as any);
-      // @ts-ignore
+  useEffect(() => {
+    let unfinishedFacility = localStorage.getItem(
+      "new_facility_details"
+    ) as any;
+    if (unfinishedFacility) {
+      unfinishedFacility = JSON.parse(unfinishedFacility);
       swal({
         icon: "info",
-        title: `You Did Not Finish Adding the Facility with name ${facility.details.facilityName}`,
+        title: `You Did Not Finish Adding the Facility with name ${unfinishedFacility?.facility_name}`,
         text:
           "Press Continue to continue from where you stopped or cancel to restart",
         // @ts-ignore
@@ -76,154 +60,44 @@ export class index extends Component<Props> {
         closeOnClickOutside: false
       }).then(async (response: any) => {
         if (response) {
-          this.setNextActiveTab((await localStorage.getItem(
-            "new_facility_active_tab"
-          )) as any);
-          this.setState({ facility });
+          setState({
+            ...state,
+            facility: unfinishedFacility,
+            activeForm:
+              (localStorage.getItem("new_facility_active_form") as IForms) ||
+              "Basic Details"
+          });
           return;
         }
         localStorage.clear();
       });
     }
+  }, []);
+
+  const setActiveForm = (formName: IForms) => {
+    setState({ ...state, activeForm: formName });
+    localStorage.setItem("new_facility_active_form", formName);
   };
 
-  postDetails(data: any, facility: any, token: string | null) {
-    this.props
-      .postFacilityContactDetails(
-        getContactDetails(data.contact, Number(facility.id)),
-        token
-      )
-      .catch(() => {
-        this.setState({
-          networkErrorSavingDetails: [
-            ...this.state.networkErrorSavingDetails,
-            "Contact Details"
-          ]
-        });
-      });
-
-    this.props
-      .postFacilityResources(
-        getResources(
-          data.resources,
-          this.props.dependancies.resources.list,
-          Number(facility.id)
-        ),
-        token
-      )
-      .catch((e: any) => {
-        this.setState({
-          networkErrorSavingDetails: [
-            ...this.state.networkErrorSavingDetails,
-            "Resources"
-          ]
-        });
-      });
-
-    this.props
-      .postFacilityUtilities(
-        getUtilities(data.utilities, Number(facility.id)),
-        token
-      )
-      .catch((e: any) => {
-        this.setState({
-          networkErrorSavingDetails: [
-            ...this.state.networkErrorSavingDetails,
-            "Utilities"
-          ]
-        });
-      });
-
-    this.props
-      .postFacilityServices(
-        getServices(
-          data.services,
-          Number(facility.id),
-          this.props.dependancies.services.list
-        ),
-        token
-      )
-      .catch((e: any) => {
-        this.setState({
-          networkErrorSavingDetails: [
-            ...this.state.networkErrorSavingDetails,
-            "Services"
-          ]
-        });
-      });
-  }
-
-  handleSubmit = async () => {
-    let data = JSON.parse((await localStorage.getItem("new_facility")) as any);
-    let token = sessionStorage.getItem("token");
-    let facility: any = null;
-    this.setState({ networkError: false, networkErrorSavingDetails: [] });
-    let addFacility = await this.props
-      .postFacilityBasicDetails(getBasicDetails(data.details), token)
-      .then((res: any) => {
-        let tempFacility = res.action.payload.data;
-        this.props.publishFacility(
-          {
-            id: tempFacility.id,
-            district_id: tempFacility.district_id
-          },
-          token
-        );
-        facility = tempFacility;
-        this.setState({ newFacility: facility });
-        return true;
-      })
-      .catch((e: any) => {
-        this.setState({ networkError: true });
-        return false;
-      });
-
-    if (facility != null) {
-      this.postDetails(data, facility, token);
+  const onSubmitDetails = (facility: any, nextForm: IForms) => {
+    if (nextForm == "Contacts & Location") {
+      setState({ ...state, facility: facility, activeForm: nextForm });
+      localStorage.setItem("new_facility_active_form", nextForm);
+      localStorage.setItem("new_facility_details", JSON.stringify(facility));
+      return;
     }
-    this.props.fetchFacilities();
-    return addFacility;
-  };
-
-  onSubmit = async (
-    values: any,
-    setSubmitting: Function,
-    key: string,
-    nextTab: string
-  ) => {
-    this.setFacilityDetails(key, values);
-    if (nextTab == "Finish") {
-      if (!(await this.handleSubmit())) {
-        toast.info(
-          <Notification error message="Failed To Create Facility, Try Again" />
-        );
-        return;
-      }
+    setActiveForm(nextForm);
+    if (nextForm == "Finish") {
       localStorage.clear();
     }
-    this.setNextActiveTab(nextTab);
   };
 
-  setNextActiveTab = (tabName: string) => {
-    this.setState({ active: tabName });
-    localStorage.setItem(`new_facility_active_tab`, tabName);
-  };
-
-  setFacilityDetails = async (key: string, details: any) => {
-    var facility = {
-      ...this.state.facility,
-      [key]: details
-    };
-    this.setState({ facility });
-    localStorage.setItem("new_facility", JSON.stringify(facility));
-  };
-
-  onCancel = () => {
+  const onCancel = () => {
     // @ts-ignore
     swal({
       icon: "warning",
       title: "Are You Sure You Want To Cancel Facility Add ?",
-      text: "All data filled in will be lost",
+      text: "All unsaved data will be lost",
       // @ts-ignore
       buttons: {
         cancel: "No",
@@ -231,72 +105,86 @@ export class index extends Component<Props> {
       },
       closeOnClickOutside: false
     }).then(async (response: any) => {
-      this.props.history.goBack();
-      localStorage.clear();
+      if (response) {
+        history.push("/facilities");
+        localStorage.clear();
+      }
     });
   };
+  return (
+    <>
+      <RedirectOnMobile />
 
-  render() {
-    return (
-      <>
-        <RedirectOnMobile />
-        <Ac
-          role={getUser().role}
-          action="facility:basic_details:create"
-          allowed={() => (
-            <CreateFacility
-              sections={this.formSections}
-              active={this.state.active}
-              onSubmit={this.onSubmit}
-              onCancel={this.onCancel}
-              dependancies={this.props.dependancies}
-              facility={this.state.newFacility}
-              errors={{
-                networkError: this.state.networkError,
-                networkErrorSavingDetails: this.state.networkErrorSavingDetails
-              }}
-            />
-          )}
-          denied={() => <Unauthorized />}
-        />
-      </>
-    );
-  }
+      <Ac
+        role={getUser().role}
+        action="facility:basic_details:create"
+        allowed={() => (
+          <div>
+            <Container style={{ paddingTop: "40px", marginBottom: "20px" }}>
+              <PageTitle
+                icon={<FontAwesomeIcon icon={faHospital} />}
+                title="New Facility"
+              />
+            </Container>
+            <Stepper
+              active={state.activeForm}
+              sections={formSections}
+            ></Stepper>
+            <Container>
+              {state.activeForm == formSections[0] && (
+                <BasicDetails
+                  onCreateOrUpdate={(facility: any) =>
+                    onSubmitDetails(facility, "Contacts & Location")
+                  }
+                  onCancel={onCancel}
+                ></BasicDetails>
+              )}
+              {state.activeForm == formSections[1] && (
+                <ContactDetails
+                  facility={state.facility}
+                  onCreateOrUpdate={(facility: any) =>
+                    onSubmitDetails(facility, "Resources")
+                  }
+                  onCancel={onCancel}
+                ></ContactDetails>
+              )}
+              {state.activeForm == formSections[2] && (
+                <Resources
+                  facility={state.facility}
+                  onCreateOrUpdate={(facility: any) =>
+                    onSubmitDetails(facility, "Utilities")
+                  }
+                  onCancel={onCancel}
+                ></Resources>
+              )}
+              {state.activeForm == formSections[3] && (
+                <Utilities
+                  facility={state.facility}
+                  onCreateOrUpdate={(facility: any) =>
+                    onSubmitDetails(facility, "Services")
+                  }
+                  onCancel={onCancel}
+                ></Utilities>
+              )}
+              {state.activeForm == formSections[4] && (
+                <Services
+                  facility={state.facility}
+                  onCreateOrUpdate={(facility: any) =>
+                    onSubmitDetails(facility, "Finish")
+                  }
+                  onCancel={onCancel}
+                ></Services>
+              )}
+              {state.activeForm == formSections[5] && (
+                <FinishWindow facility={state.facility} errors={[]} />
+              )}
+            </Container>
+          </div>
+        )}
+        denied={() => <Unauthorized />}
+      />
+    </>
+  );
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    drawerOpen: state.ui.advancedSearchOpen,
-    facilities: state.facilities.list,
-    dependancies: state.dependancies
-  };
-};
-
-type Props = {
-  drawerOpen: boolean;
-  toggleFacilityFilter: Function;
-  facilities: Array<any>;
-  dependancies: any;
-  fetchOwners: Function;
-  history: any;
-  postFacilityBasicDetails: Function;
-  postFacilityContactDetails: Function;
-  postFacilityResources: Function;
-  postFacilityUtilities: Function;
-  postFacilityServices: Function;
-  publishFacility: Function;
-  fetchFacilities: Function;
-};
-export default connect(
-  mapStateToProps,
-  {
-    fetchOwners,
-    postFacilityBasicDetails,
-    postFacilityContactDetails,
-    postFacilityResources,
-    postFacilityUtilities,
-    postFacilityServices,
-    publishFacility,
-    fetchFacilities
-  }
-)(index);
+export default CreateFacility;

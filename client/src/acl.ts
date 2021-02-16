@@ -25,8 +25,6 @@ export const acl = {
   admin: {
     static: [
       "facility:basic_details:create",
-      "facility:basic_details:licensing_status",
-      "facility:basic_details:registration_number",
       "facility:basic_details:facility_type",
       "facility:basic_details:update",
       "facility:basic_details:delete",

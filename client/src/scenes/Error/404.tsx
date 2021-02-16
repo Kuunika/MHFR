@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Button from "../../components/atoms/Button";
 
-function Preloader() {
+function NotFound() {
   const onReload = () => {
     window.location.replace("/");
   };
@@ -20,7 +20,7 @@ function Preloader() {
   );
 }
 
-export default Preloader;
+export default NotFound;
 
 const Container = styled.div`
   display: flex;
@@ -36,18 +36,14 @@ const Container = styled.div`
 `;
 
 const Message = styled.div`
-  font-size: 28px;
-  color: #222222;
-  margin-top: 15px;
-  @media (max-width: 700px) {
-    font-size: 20px;
-  }
+  color: #5a90dc;
+  text-align: center;
 `;
 const Img = styled.img`
-  margin: auto;
-  width: 200px;
+  margin: 2rem auto;
+  width: 80px;
   @media (max-width: 700px) {
-    width: 100px;
+    width: 80px;
   }
 `;
 const Code = styled.div`

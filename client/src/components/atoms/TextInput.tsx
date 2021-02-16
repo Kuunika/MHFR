@@ -3,28 +3,10 @@ import { FormControl, TextField, FormHelperText } from "@material-ui/core";
 import InputError from "./InputError";
 
 function TextInput(props: Props) {
-  const {
-    value,
-    name,
-    label,
-    touched,
-    error,
-    onChange,
-    onBlur,
-    placeholder
-  } = props;
+  const { name, touched, error } = props;
   return (
     <FormControl className="mfl-max-width">
-      <TextField
-        value={value}
-        name={name}
-        label={label}
-        placeholder={placeholder}
-        error={touched && typeof error != "undefined"}
-        onChange={onChange}
-        onBlur={onBlur}
-        {...props}
-      />
+      <TextField {...props} error={touched && typeof error != "undefined"} />
       {error && touched && <InputError error={error} for={name}></InputError>}
     </FormControl>
   );

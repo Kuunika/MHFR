@@ -8,7 +8,7 @@ function InputError(props: Props) {
   return (
     <FormHelperText data-test={`fieldError${props.for}`}>
       <Container>
-        <p>{props.error}</p>
+        <span>{props.error}</span>
         <FontAwesomeIcon icon={faExclamationTriangle} />
       </Container>
     </FormHelperText>

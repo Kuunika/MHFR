@@ -2,15 +2,21 @@ import actions from "../actions/actions";
 import { getServicesHierachyForRedux } from "../../helpers";
 // @ts-ignore
 import { isEqual, uniqWith } from "lodash";
+import {
+  IAdvancedFilter,
+  IFacilities,
+  IFacility,
+  IFacilityCurrent
+} from "../../types";
 
 const initialState = {
-  list: [],
-  filteredList: [],
+  list: [] as Array<IFacility>,
+  filteredList: [] as Array<IFacility>,
   current: {
-    resources: [],
-    services: [],
-    utilities: []
-  },
+    resources: [] as any,
+    services: [] as any,
+    utilities: [] as any
+  } as IFacilityCurrent,
   advancedFilter: {
     filterValues: [],
     filterResults: {
@@ -19,9 +25,10 @@ const initialState = {
       utilities: [],
       services: []
     }
-  } as { filterValues: Array<any>; filterResults: any },
-  quickSearchValue: "" as any
-};
+  } as IAdvancedFilter,
+  quickSearchValue: ""
+} as IFacilities;
+
 export default (
   state = initialState,
   action: { type: string; payload?: any; meta: any }
@@ -49,6 +56,25 @@ export default (
         filteredList: state.list.filter((val: any) =>
           action.payload.includes(val.id)
         )
+      };
+    case actions.fetchCurrentFacility + "_FULFILLED":
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          ...action.payload[0].data,
+          resources: action.payload[1].data.data,
+          services: uniqWith(
+            getServicesHierachyForRedux(
+              action.payload[2].data.data,
+              action.meta.services.list,
+              action.meta.services.types
+            ),
+            (curSer: any, nextSer: any) =>
+              curSer.service.id == nextSer.service.id
+          ),
+          utilities: action.payload[3].data.data
+        }
       };
     case actions.fetchCurrentBasic + "_FULFILLED":
       return {

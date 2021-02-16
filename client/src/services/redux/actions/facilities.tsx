@@ -18,14 +18,35 @@ import {
   deleteUtilities,
   putServices,
   deleteServices,
-  archiveFacility as archFacility
+  archiveFacility as archFacility,
+  getDependancies,
+  getCurrentFacility
 } from "../../api";
 import { groupIntersect, hasFilterValuesForType } from "../../helpers";
+import { IDependancies } from "../../types";
 
 export const fetchFacilities = () => {
   return {
     type: actions.fetchFacilities,
     payload: getFacilities()
+  };
+};
+
+export const fetchDependancies = () => {
+  return {
+    type: actions.fetchDependancies,
+    payload: getDependancies()
+  };
+};
+
+export const fetchCurrentFacility = (
+  facilityId: any,
+  dependancies: IDependancies
+) => {
+  return {
+    type: actions.fetchCurrentFacility,
+    payload: getCurrentFacility(facilityId),
+    meta: dependancies
   };
 };
 
@@ -232,6 +253,19 @@ export const basicAdvancedFilter = (filterValues: Array<any>) => {
       return { facility_owner_id: opt.id };
     });
 
+  const rangeFilter = filterValues
+    .filter(filter => filter.type == "lastUpdatedRange")
+    .map(opt => {
+      return opt.values
+        ? {
+            and: [
+              { updated_at: { gte: new Date(opt?.values[0]) } },
+              { updated_at: { lt: new Date(opt?.values[1]) } }
+            ]
+          }
+        : {};
+    });
+
   const FILTER = {
     where: {
       and: [
@@ -239,7 +273,8 @@ export const basicAdvancedFilter = (filterValues: Array<any>) => {
         { or: facilityTypeFilterOpt },
         { or: regulatoryStatusFilterOpt },
         { or: operationalStatusFilterOpt },
-        { or: ownerFilterOpt }
+        { or: ownerFilterOpt },
+        { or: rangeFilter }
       ]
     }
   };

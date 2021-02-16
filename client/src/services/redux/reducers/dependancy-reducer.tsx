@@ -1,135 +1,101 @@
 import actions from "../actions/actions";
 import { getServicesHierachy } from "../../helpers";
 import apiAdaptor from "../../apiAdaptor";
+import {
+  IDependancies,
+  IDistrict,
+  IFacilityType,
+  IFeedbackType,
+  IOperationalStatus,
+  IOwner,
+  IRegulatoryStatus,
+  IResource,
+  IResourceType,
+  IRole,
+  IService,
+  IServiceHierachy,
+  IServiceType,
+  IUtility,
+  IUtilityType
+} from "../../types";
 
 const initialState = {
   utilities: {
-    list: [] as Array<any>,
-    types: [] as Array<any>
+    list: [] as Array<IUtility>,
+    types: [] as Array<IUtilityType>
   },
   services: {
-    list: [] as Array<any>,
-    hierachy: [] as Array<any>,
-    types: [] as Array<any>
+    list: [] as Array<IService>,
+    hierachy: [] as Array<IServiceHierachy>,
+    types: [] as Array<IServiceType>
   },
   resources: {
-    list: [] as Array<any>,
-    types: [] as Array<any>
+    list: [] as Array<IResource>,
+    types: [] as Array<IResourceType>
   },
   regulatoryStatuses: {
-    list: [] as Array<any>
+    list: [] as Array<IRegulatoryStatus>
   },
   operationalStatuses: {
-    list: [] as Array<any>
+    list: [] as Array<IOperationalStatus>
   },
   districts: {
-    list: [] as Array<any>
+    list: [] as Array<IDistrict>
   },
   owners: {
-    list: [] as Array<any>
+    list: [] as Array<IOwner>
   },
   facilityTypes: {
-    list: [] as Array<any>
+    list: [] as Array<IFacilityType>
+  },
+  feedbackTypes: {
+    list: [] as Array<IFeedbackType>
   },
   roles: {
-    list: [] as Array<any>
+    list: [] as Array<IRole>
   }
-};
+} as IDependancies;
+
 export default (
   state = initialState,
   action: { type: string; payload?: any }
 ) => {
   switch (action.type) {
-    case actions.fetchUtilities + "_FULFILLED":
+    case actions.fetchDependancies + "_FULFILLED":
       return {
         ...state,
         utilities: {
-          ...state.utilities,
-          list: apiAdaptor.getUtilities(action.payload.data)
-        }
-      };
-    case actions.fetchUtilityTypes + "_FULFILLED":
-      return {
-        ...state,
-        utilities: {
-          ...state.utilities,
-          types: apiAdaptor.getUtilityTypes(action.payload.data)
-        }
-      };
-
-    case actions.fetchServices + "_FULFILLED":
-      return {
-        ...state,
+          list: apiAdaptor.getUtilities(action.payload[0].data),
+          types: apiAdaptor.getUtilityTypes(action.payload[1].data)
+        },
         services: {
-          ...state.services,
-          list: apiAdaptor.getServices(action.payload.data),
+          list: apiAdaptor.getServices(action.payload[2].data),
+          types: apiAdaptor.getServiceTypes(action.payload[3].data),
           hierachy: apiAdaptor.getServices(
-            getServicesHierachy(action.payload.data)
+            getServicesHierachy(action.payload[2].data)
           )
-        }
-      };
-    case actions.fetchServiceTypes + "_FULFILLED":
-      return {
-        ...state,
-        services: {
-          ...state.services,
-          types: apiAdaptor.getServiceTypes(action.payload.data)
-        }
-      };
-
-    case actions.fetchResources + "_FULFILLED":
-      return {
-        ...state,
+        },
         resources: {
-          ...state.resources,
-          list: apiAdaptor.getResources(action.payload.data)
-        }
-      };
-    case actions.fetchResourceTypes + "_FULFILLED":
-      return {
-        ...state,
-        resources: {
-          ...state.resources,
-          types: apiAdaptor.getResourceTypes(action.payload.data)
-        }
-      };
-
-    case actions.fetchRegulatoryStatuses + "_FULFILLED":
-      return {
-        ...state,
+          list: apiAdaptor.getResources(action.payload[4].data),
+          types: apiAdaptor.getResourceTypes(action.payload[5].data)
+        },
         regulatoryStatuses: {
-          list: apiAdaptor.getRegulatoryStatuses(action.payload.data)
-        }
-      };
-
-    case actions.fetchDistricts + "_FULFILLED":
-      return {
-        ...state,
+          list: apiAdaptor.getRegulatoryStatuses(action.payload[6].data)
+        },
         districts: {
-          list: apiAdaptor.getDistricts(action.payload.data)
-        }
-      };
-
-    case actions.fetchFacilityTypes + "_FULFILLED":
-      return {
-        ...state,
-        facilityTypes: {
-          list: apiAdaptor.getFacilityTypes(action.payload.data)
-        }
-      };
-
-    case actions.fetchOwners + "_FULFILLED":
-      return {
-        ...state,
-        owners: {
-          list: apiAdaptor.getOwners(action.payload.data)
-        }
-      };
-    case actions.fetchOperationalStatuses + "_FULFILLED":
-      return {
-        ...state,
+          list: apiAdaptor.getDistricts(action.payload[7].data)
+        },
         operationalStatuses: {
-          list: apiAdaptor.getOperationalStatuses(action.payload.data)
+          list: apiAdaptor.getOperationalStatuses(action.payload[8].data)
+        },
+        facilityTypes: {
+          list: apiAdaptor.getFacilityTypes(action.payload[9].data)
+        },
+        owners: {
+          list: apiAdaptor.getOwners(action.payload[10].data)
+        },
+        feedbackTypes: {
+          list: action.payload[11].data
         }
       };
     case actions.fetchUserRoles + "_FULFILLED":

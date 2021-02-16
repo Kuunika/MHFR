@@ -31,10 +31,10 @@ describe("Add Facility Services", () => {
     cy.window().then(win => {
       win.sessionStorage.clear();
       win.localStorage.clear();
-      win.localStorage.setItem("new_facility_active_tab", `Services`);
+      win.localStorage.setItem("new_facility_active_form", `Services`);
       win.localStorage.setItem(
-        "new_facility",
-        `{"details":{"facilityName":"kuunika"}}`
+        "new_facility_details",
+        JSON.stringify({ facility_name: "kuunika", id: 1 })
       );
     });
     cy.fetch_service_types().then(serviceTypesData => {
@@ -44,10 +44,10 @@ describe("Add Facility Services", () => {
 
   beforeEach(() => {
     cy.window().then(win => {
-      win.localStorage.setItem("new_facility_active_tab", `Services`);
+      win.localStorage.setItem("new_facility_active_form", `Services`);
       win.localStorage.setItem(
-        "new_facility",
-        `{"details":{"facilityName":"kuunika"}}`
+        "new_facility_details",
+        JSON.stringify({ facility_name: "kuunika", id: 1 })
       );
     });
   });
@@ -63,25 +63,25 @@ describe("Add Facility Services", () => {
       });
     });
 
-    it("Shows facility contacts form", () => {
+    it("Shows facility services form", () => {
       cy.get("button.swal-button.swal-button--confirm")
         .first()
         .click();
     });
   });
 
-  context("Validates input in front-end", () => {
-    it("Validates services values", () => {
-      cy.get("[data-test='saveBtn']")
-        .first()
-        .click();
+  // context("Validates input in front-end", () => {
+  //   it("Validates services values", () => {
+  //     cy.get("[data-test='saveBtn']")
+  //       .first()
+  //       .click();
 
-      cy.get(`[data-test="fieldErrorservices"]`)
-        .first()
-        .should("be.visible")
-        .contains("Please Select Atleast One Service");
-    });
-  });
+  //     cy.get(`[data-test="fieldErrorservices"]`)
+  //       .first()
+  //       .should("be.visible")
+  //       .contains("Please Select Atleast One Service");
+  //   });
+  // });
 
   context("Adds Facility Services", () => {
     let selectedServices;
@@ -118,12 +118,12 @@ describe("Add Facility Services", () => {
       }).as("publish");
 
       for (let serviceType of serviceTypes) {
-        selectFirst(serviceType.service_type.replace(/ /g, ""));
-
+        if (serviceType.id == 6) continue;
         cy.get(`[id=menu-${serviceType.service_type.replace(/ /g, "")}]`)
           .first()
           .click();
-        cy.get("[data-test=formFooter]")
+
+        cy.get(`[data-test=check${serviceType.id + "".replace(/ /g, "")}]`)
           .first()
           .click();
       }
@@ -132,10 +132,10 @@ describe("Add Facility Services", () => {
         .first()
         .click();
 
-      cy.wait("@basics");
-      cy.wait("@contacts");
+      // cy.wait("@basics");
+      // cy.wait("@contacts");
       cy.wait("@services");
-      cy.wait("@publish");
+      // cy.wait("@publish");
 
       cy.get("@services").then(xhr => {
         const { body } = xhr.request;
@@ -144,6 +144,7 @@ describe("Add Facility Services", () => {
         cy.expect(body[0]).to.have.deep.keys({
           client_id: 1,
           facility_id: 1,
+          created_date: new Date(),
           service_id: 1
         });
       });

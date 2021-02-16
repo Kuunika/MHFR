@@ -9,7 +9,7 @@ import {
   faFileExcel
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { isAdmin, getUser } from "../../services/helpers";
+import { isLoggedIn, getUser } from "../../services/helpers";
 import Ac from "../atoms/Ac";
 
 library.add(faPlus, faFilePdf, faFileExcel);
@@ -38,7 +38,7 @@ function FacilityToolbar(props: Props) {
           Download PDF
         </Button>
       </DownloadButtonsContainer>
-      {isAdmin() && (
+      {isLoggedIn() && (
         <AddButtonContainer>
           <Ac
             role={getUser().role}

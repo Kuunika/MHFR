@@ -3,9 +3,7 @@
 var app = require("../server");
 var rolePermissions = require("../../data/role-permissions");
 
-
-
-module.exports = function () {
+module.exports = function() {
   return async function acl(req, res, next) {
     const accessTokenModel = app.models.AccessToken;
     const userModel = app.models.Client;
@@ -13,27 +11,23 @@ module.exports = function () {
     const roleModel = app.models.Role;
     let roleMappings;
     let userInstance;
-    let userRoles = []
-
-
+    let userRoles = [];
 
     // return next()
 
-    const token = req.headers.authorization ?
-      req.headers.authorization : req.query.access_token;
+    const token = req.headers.authorization
+      ? req.headers.authorization
+      : req.query.access_token;
 
     if (req.url.includes("/explorer")) {
       return next();
     }
 
-
     const { method, model } = getModel(req.url);
-
 
     if (checkPermission("all", model, method, req)) {
       return next();
     }
-
 
     if (token) {
       const tokenInstance = await accessTokenModel.findById(token);
@@ -46,21 +40,25 @@ module.exports = function () {
         roleMappings.map(roleMap => roleModel.findById(roleMap.roleId))
       );
 
-
-
-
-      if (checkPermission("all", model, method, req, userInstance.id, userRoles)) {
+      if (
+        checkPermission("all", model, method, req, userInstance.id, userRoles)
+      ) {
         return next();
       }
     } else {
       unAuthorizedError(next);
     }
 
-
     let userPermitted = false;
 
     userRoles.every(userRole => {
-      const acl = checkPermission(userRole.name, model, method, req, userInstance.id);
+      const acl = checkPermission(
+        userRole.name,
+        model,
+        method,
+        req,
+        userInstance.id
+      );
       if (acl) {
         userPermitted = true;
         return false;
@@ -70,8 +68,7 @@ module.exports = function () {
 
     if (userPermitted) {
       if (req.method == "PUT" || req.method == "PATCH") {
-
-        if (permittedUpdateFields[0] === 'all') {
+        if (permittedUpdateFields[0] === "all") {
           return next();
         }
 
@@ -86,14 +83,12 @@ module.exports = function () {
 
 // helpers
 const getModel = url => {
-
-
   const urlParts = url.split("?")[0].split("/");
   const filteredParts = urlParts.filter(part => isNaN(part));
 
   return {
     model: filteredParts[1] ? filteredParts[1].toLowerCase() : "/",
-    method: filteredParts[2] ? filteredParts[2] : "*",
+    method: filteredParts[2] ? filteredParts[2] : "*"
   };
 };
 
@@ -107,18 +102,22 @@ const unAuthorizedError = next => {
 };
 
 let permittedUpdateFields = [];
-const checkPermission = (role, model, method, req, loggedUserId = 0, userRoles = []) => {
+const checkPermission = (
+  role,
+  model,
+  method,
+  req,
+  loggedUserId = 0,
+  userRoles = []
+) => {
   const rolePermission = rolePermissions.find(
     rolePermissions => rolePermissions.role === role
   );
-
-
 
   if (!rolePermission) {
     return false;
   }
   const roleModel = rolePermission.acls.find(acl => acl.model === model);
-
 
   if (!roleModel) {
     return false;
@@ -134,22 +133,23 @@ const checkPermission = (role, model, method, req, loggedUserId = 0, userRoles =
   if (roleMethod.customCheck) {
     const userUrlId = req._parsedUrl.pathname.split("/")[3];
 
-
     if (userRoles.length === 0) {
-      return false
+      return false;
     }
 
     let isPermitted = false;
     userRoles.forEach(userRole => {
       if (isPermitted) {
-        return
+        return;
       }
-      isPermitted = roleMethod.customCheck(loggedUserId, parseInt(userUrlId), userRole.name)
+      isPermitted = roleMethod.customCheck(
+        loggedUserId,
+        parseInt(userUrlId),
+        userRole.name
+      );
+    });
 
-    })
-
-    return isPermitted
-
+    return isPermitted;
   }
 
   if (roleMethod.permittedUpdateFields) {
@@ -158,8 +158,6 @@ const checkPermission = (role, model, method, req, loggedUserId = 0, userRoles =
       ...roleMethod.permittedUpdateFields
     ];
   }
-
-  console.log(roleMethod)
 
   return roleMethod.permissions.find(permission => permission === req.method);
 };
@@ -172,8 +170,6 @@ const checkPermittedFields = (req, permittedUpdateFields, next) => {
     })
     .on("end", () => {
       body = Buffer.concat(body).toString();
-
-
 
       Object.keys(JSON.parse(body)).forEach(field => {
         if (field === "id") return;

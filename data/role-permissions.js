@@ -1,7 +1,5 @@
 "use strict";
 
-
-
 // corresponds to request methods
 const operations = {
   WRITE: "POST",
@@ -48,22 +46,19 @@ const facility = {
   DISTRICT: "district_id",
   CLIENT: "client_id",
   ARCHIVED_DATE: "archived_date",
-  PUBLISHED_DATE: "published_date",
-
+  PUBLISHED_DATE: "published_date"
 };
 
 const customCheck = (loggedUserId, userUrlId, role) => {
   if (role === roles.ADMIN) {
     return true;
   }
-
   return loggedUserId === userUrlId;
 };
 
 const allExcept = (except, all) => {
-  return all.filter(prop => !except.includes(prop))
-}
-
+  return all.filter(prop => !except.includes(prop));
+};
 
 const rolePermissions = [
   {
@@ -81,7 +76,7 @@ const rolePermissions = [
           { method: "download", permissions: [operations.READ] },
           { method: "findByCode", permissions: [operations.READ] },
           { method: "findBySystem", permissions: [operations.READ] },
-          { method: "contactdetails", permissions: [operations.READ] },
+          { method: "contactdetails", permissions: [operations.READ] }
         ]
       },
       {
@@ -215,7 +210,8 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE
+              operations.WRITE,
+              operations.PATCH
             ]
           },
           {
@@ -224,7 +220,9 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE]
+              operations.WRITE,
+              operations.PATCH
+            ]
           },
           {
             method: "contactDetails",
@@ -232,7 +230,9 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE]
+              operations.WRITE,
+              operations.PATCH
+            ]
           },
           {
             method: "services",
@@ -276,7 +276,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permissions: [operations.UPDATE, operations.WRITE]
+            permissions: [operations.UPDATE, operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -290,7 +290,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permissions: [operations.WRITE, operations.UPDATE]
+            permissions: [operations.WRITE, operations.UPDATE, operations.PATCH]
           }
         ]
       },
@@ -299,11 +299,16 @@ const rolePermissions = [
         methods: [
           {
             method: "*",
-            permissions: [operations.READ, operations.UPDATE, operations.WRITE]
+            permissions: [
+              operations.READ,
+              operations.UPDATE,
+              operations.WRITE,
+              operations.PATCH
+            ]
           },
           {
             method: "replaceOrCreate",
-            permissions: [operations.UPDATE, operations.WRITE]
+            permissions: [operations.UPDATE, operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -369,7 +374,7 @@ const rolePermissions = [
         methods: [
           {
             method: "*",
-            permissions: [operations.UPDATE]
+            permissions: [operations.UPDATE, operations.PATCH]
           }
         ]
       }
@@ -384,15 +389,20 @@ const rolePermissions = [
           {
             method: "*",
             permittedUpdateFields: allExcept(
-              [facility.REGULATORY_STATUS,
-              facility.REGISTRATION_NUMBER,
-              facility.FACILITY_TYPE, facility.ALL_FIELDS],
-              Object.values(facility)),
+              [
+                facility.REGULATORY_STATUS,
+                facility.REGISTRATION_NUMBER,
+                facility.FACILITY_TYPE,
+                facility.ALL_FIELDS
+              ],
+              Object.values(facility)
+            ),
             permissions: [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE
+              operations.WRITE,
+              operations.PATCH
             ]
           },
           {
@@ -401,7 +411,9 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE]
+              operations.WRITE,
+              operations.PATCH
+            ]
           },
 
           {
@@ -447,11 +459,16 @@ const rolePermissions = [
         methods: [
           {
             method: "*",
-            permissions: [operations.READ, operations.UPDATE, operations.WRITE]
+            permissions: [
+              operations.READ,
+              operations.UPDATE,
+              operations.WRITE,
+              operations.PATCH
+            ]
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -464,7 +481,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -477,7 +494,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       }
@@ -509,7 +526,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -551,7 +568,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -575,9 +592,12 @@ const rolePermissions = [
           {
             method: "*",
             permittedUpdateFields: allExcept(
-              [facility.REGULATORY_STATUS,
-              facility.REGISTRATION_NUMBER,
-              facility.FACILITY_TYPE, facility.ALL_FIELDS],
+              [
+                facility.REGULATORY_STATUS,
+                facility.REGISTRATION_NUMBER,
+                facility.FACILITY_TYPE,
+                facility.ALL_FIELDS
+              ],
               Object.values(facility)
             ),
             permissions: [operations.UPDATE, operations.PATCH]
@@ -588,8 +608,10 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE]
-          },
+              operations.WRITE,
+              operations.PATCH
+            ]
+          }
         ]
       },
       {
@@ -601,7 +623,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -614,7 +636,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -627,10 +649,10 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
-      },
+      }
     ]
   },
   {
@@ -642,15 +664,19 @@ const rolePermissions = [
           {
             method: "*",
             permittedUpdateFields: allExcept(
-              [facility.REGULATORY_STATUS,
-              facility.REGISTRATION_NUMBER,
-              facility.ALL_FIELDS],
-              Object.values(facility)),
+              [
+                facility.REGULATORY_STATUS,
+                facility.REGISTRATION_NUMBER,
+                facility.ALL_FIELDS
+              ],
+              Object.values(facility)
+            ),
             permissions: [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE
+              operations.WRITE,
+              operations.PATCH
             ]
           },
           {
@@ -668,7 +694,9 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE]
+              operations.WRITE,
+              operations.PATCH
+            ]
           },
           {
             method: "utilities",
@@ -676,7 +704,8 @@ const rolePermissions = [
               operations.DELETE,
               operations.READ,
               operations.UPDATE,
-              operations.WRITE
+              operations.WRITE,
+              operations.PATCH
             ]
           },
           {
@@ -700,7 +729,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -713,7 +742,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -727,7 +756,7 @@ const rolePermissions = [
           },
           {
             method: "replaceOrCreate",
-            permission: [operations.WRITE]
+            permission: [operations.WRITE, operations.PATCH]
           }
         ]
       },
@@ -745,8 +774,6 @@ const rolePermissions = [
 ];
 
 module.exports = rolePermissions;
-
-
 
 // { data:
 //   { physicalAddress: 'Kuunika',

@@ -1,6 +1,99 @@
 import axios from "axios";
+import {
+  getAdvancedBasicFilter,
+  getAdvancedResourcesFilter,
+  getServicesAdvancedFilter,
+  getUtilitiesAdvancedFilter
+} from "../scenes/Facility/helpers";
+import { hasFilterValuesForType } from "./helpers";
+import { IFilterValues } from "./types";
 
 const API = process.env.REACT_APP_API_URL;
+
+export const getFilteredFacilities = (filterValues: Array<IFilterValues>) => {
+  const basicFilter = getAdvancedBasicFilter(filterValues);
+  const resourcesFilter = getAdvancedResourcesFilter(filterValues);
+  const utilitiesFilter = getUtilitiesAdvancedFilter(filterValues);
+  const servicesFilter = getServicesAdvancedFilter(filterValues);
+  let uris: any = [];
+  uris = hasFilterValuesForType("basic", filterValues)
+    ? [
+        ...uris,
+        axios.get(`${API}/Facilities?filter=${JSON.stringify(basicFilter)}`)
+      ]
+    : uris;
+  uris = hasFilterValuesForType("resources", filterValues)
+    ? [
+        ...uris,
+        axios.get(
+          `${API}/FacilityResources?filter=${JSON.stringify(resourcesFilter)}`
+        )
+      ]
+    : uris;
+  uris = hasFilterValuesForType("utilities", filterValues)
+    ? [
+        ...uris,
+        axios.get(
+          `${API}/FacilityUtilities?filter=${JSON.stringify(utilitiesFilter)}`
+        )
+      ]
+    : uris;
+  uris = hasFilterValuesForType("utilities", filterValues)
+    ? [
+        ...uris,
+        axios.get(
+          `${API}/FacilityServices?filter=${JSON.stringify(servicesFilter)}`
+        )
+      ]
+    : uris;
+
+  return axios.all(uris);
+};
+
+export const getDependancies = () => {
+  const uris = [
+    axios.get(`${API}/Utilities`),
+    axios.get(`${API}/UtilityTypes`),
+    axios.get(`${API}/Services`),
+    axios.get(`${API}/ServiceTypes`),
+    axios.get(`${API}/Resources`),
+    axios.get(`${API}/ResourceTypes`),
+    axios.get(`${API}/RegulatoryStatuses`),
+    axios.get(`${API}/Districts`),
+    axios.get(`${API}/OperationalStatuses`),
+    axios.get(`${API}/FacilityTypes`),
+    axios.get(`${API}/owners`),
+    axios.get(`${API}/FeedbackTypes`)
+  ];
+  return axios.all(uris);
+};
+
+export const getCurrentFacility = (facilityId: any) => {
+  const basicDetailsFilter = {
+    include: [
+      "owner",
+      "facilityType",
+      "operationalStatus",
+      "regulatoryStatus",
+      "contactPeople",
+      "addresses",
+      "locations",
+      "geolocations",
+      { district: "zone" }
+    ]
+  };
+  const uris = [
+    axios.get(
+      `${API}/Facilities/${facilityId}?filter=${JSON.stringify(
+        basicDetailsFilter
+      )}`
+    ),
+    axios.get(`${API}/FacilityResources/latest?id=${facilityId}`),
+    axios.get(`${API}/FacilityServices/latest?id=${facilityId}`),
+    axios.get(`${API}/FacilityUtilities/latest?id=${facilityId}`)
+  ];
+  return axios.all(uris);
+};
 
 export const getUserRoles = () => {
   const url = `${API}/Roles`;
@@ -236,7 +329,7 @@ export const putBasicDetails = (
       Authorization: `${token}`
     }
   };
-  return axios.put(url, data, header);
+  return axios.patch(url, data, header);
 };
 
 export const putContactDetails = (data: any, token: string) => {

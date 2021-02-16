@@ -5,7 +5,7 @@ function Preloader() {
   return (
     <Container>
       <div style={{ textAlign: "center" }}>
-        <img src="./static/images/Loading.gif" style={{ margin: "auto" }} />
+        <div id="loadergif"></div>
         <Message>
           SETTING UP YOUR ENVIRONMENT <br />
           THIS COULD TAKE A WHILE...
@@ -31,10 +31,5 @@ const Container = styled.div`
 `;
 
 const Message = styled.div`
-  font-size: 28px;
   color: #5a90dc;
-  margin-top: 15px;
-  @media (max-width: 700px) {
-    font-size: 20px;
-  }
 `;

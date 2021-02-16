@@ -20,94 +20,28 @@ import Preloader from "../components/atoms/Preloader";
 import ErrorScreen from "../scenes/Error/500";
 import ForgotPassword from "../scenes/Users/PasswordReset/ForgotPassword.container";
 import ResetPassword from "../scenes/Users/PasswordReset/ResetPassword.container";
-import { connect } from "react-redux";
-import {
-  fetchUtilities,
-  fetchUtilityTypes,
-  fetchServiceTypes,
-  fetchServices,
-  fetchResources,
-  fetchResourceTypes,
-  fetchRegulatoryStatuses,
-  fetchDistricts,
-  fetchOperationalStatuses,
-  dispatchDependancyError,
-  fetchFacilityTypes
-} from "../services/redux/actions/dependancies";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDependancies } from "../services/redux/actions/dependancies";
 import { fetchUserDetails } from "../services/redux/actions/users";
 import { fetchFacilities } from "../services/redux/actions/facilities";
 import { ToastContainer, cssTransition } from "react-toastify";
-import { isAdmin } from "../services/helpers";
+import { isLoggedIn } from "../services/helpers";
+import { IState } from "../services/types";
 
 const Slide = cssTransition({
   enter: "slideIn",
   exit: "slideOut",
   duration: 750
 });
-const App: React.FC = (props: any) => {
-  const {
-    loading,
-    facilities,
-    fetchUtilities,
-    fetchUtilityTypes,
-    fetchServiceTypes,
-    fetchServices,
-    fetchResources,
-    fetchResourceTypes,
-    fetchRegulatoryStatuses,
-    fetchDistricts,
-    fetchOperationalStatuses,
-    dispatchDependancyError,
-    fetchFacilities,
-    fetchFacilityTypes
-  } = props;
+const App: React.FC = () => {
+  const dispatch = useDispatch();
+  const { status, errors, users } = useSelector((state: IState) => state);
 
   useEffect(() => {
-    fetchUtilities().catch(() => {
-      dispatchDependancyError();
-    });
+    dispatch(fetchDependancies());
+    dispatch(fetchFacilities());
 
-    fetchUtilityTypes().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchServiceTypes().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchServices().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchResources().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchResourceTypes().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchRegulatoryStatuses().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchOperationalStatuses().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchDistricts().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchFacilities().catch(() => {
-      dispatchDependancyError();
-    });
-
-    fetchFacilityTypes().catch(() => {
-      dispatchDependancyError();
-    });
-
-    if (isAdmin()) {
+    if (isLoggedIn()) {
       let user: any = sessionStorage.getItem("user");
       user = user ? JSON.parse(user) : false;
 
@@ -122,11 +56,9 @@ const App: React.FC = (props: any) => {
     }
   }, []);
 
-  const isLoading = () => facilities.length == 0 && loading.fetchFacilities;
-
-  return isLoading() ? (
+  return status.fetchDependancies ? (
     <Preloader />
-  ) : props.error ? (
+  ) : errors.dependancyError ? (
     <ErrorScreen />
   ) : (
     <>
@@ -135,7 +67,7 @@ const App: React.FC = (props: any) => {
         closeButton={false}
         style={{
           zIndex: "1800",
-          position: "absolute",
+          position: "fixed",
           top: "0",
           left: "0",
           width: "100vw",
@@ -159,7 +91,7 @@ const App: React.FC = (props: any) => {
               path="/resetPassword/:token"
               component={ResetPassword}
             />
-            {props.isAuthenticated && (
+            {users.currentUser.authenticated && (
               <Route exact path="/Facilities/add" component={AddFacility} />
             )}
             <Route exact path="/Facilities/:id" component={ViewFacility} />
@@ -168,13 +100,13 @@ const App: React.FC = (props: any) => {
               path="/Facilities/:id/:page"
               component={ViewFacility}
             />
-            {props.isAuthenticated && (
+            {users.currentUser.authenticated && (
               <Route
                 path="/Facilities/:id/:page/edit"
                 component={UpdateFacility}
               />
             )}
-            {props.isAuthenticated && (
+            {users.currentUser.authenticated && (
               <Route exact path="/users" component={Users} />
             )}
             <Route path="*" component={NotFound} />
@@ -186,27 +118,4 @@ const App: React.FC = (props: any) => {
   );
 };
 
-const mapStateToProps = (state: any) => ({
-  isAuthenticated: state.users.currentUser.authenticated,
-  loading: state.status,
-  error: state.errors.dependancyError,
-  facilities: state.facilities.list
-});
-export default connect(
-  mapStateToProps,
-  {
-    fetchUtilities,
-    fetchUtilityTypes,
-    fetchServiceTypes,
-    fetchServices,
-    fetchResources,
-    fetchResourceTypes,
-    fetchRegulatoryStatuses,
-    fetchDistricts,
-    fetchOperationalStatuses,
-    dispatchDependancyError,
-    fetchFacilities,
-    fetchFacilityTypes,
-    fetchUserDetails
-  }
-)(App);
+export default App;

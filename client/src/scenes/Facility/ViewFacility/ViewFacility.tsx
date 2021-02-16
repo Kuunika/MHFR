@@ -32,11 +32,7 @@ function ViewFacility(props: Props) {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12} md={3}>
             <Card heading="Facility menu">
-              <FacilitySubMenu
-                menu={facilitySubMenu}
-                onClick={onChangePage}
-                activePage={activePage}
-              />
+              <FacilitySubMenu />
             </Card>
           </Grid>
           <Grid item xs={12} sm={12} md={9}>
@@ -115,7 +111,7 @@ type Props = {
   onEditDetails: Function;
   facilitySubMenu: Array<any>;
   downloadFacility: Function;
-  isLoading: boolean;
+  isLoading: boolean | undefined;
   badge: any;
   archiveFacility: Function;
 };
