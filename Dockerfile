@@ -1,6 +1,7 @@
 FROM node:10-alpine3.9
 WORKDIR /app
+COPY package.json ./
+RUN npm install --only=prod
+RUN npm install pm2 -g
 COPY . .
-RUN cd /app && npm i --only=prod && cd ./client/ && npm i --only=prod
-RUN apk upgrade && apk add bash
-RUN npm i -g serve
+CMD [ "pm2-runtime", "server/server.j" ]
