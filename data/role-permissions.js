@@ -73,6 +73,7 @@ const rolePermissions = [
           { method: "resources", permissions: [operations.READ] },
           { method: "list", permissions: [operations.READ] },
           { method: "filter", permissions: [operations.READ] },
+          { method: "fhir", permissions: [operations.READ] },
           { method: "download", permissions: [operations.READ] },
           { method: "findByCode", permissions: [operations.READ] },
           { method: "findBySystem", permissions: [operations.READ] },
