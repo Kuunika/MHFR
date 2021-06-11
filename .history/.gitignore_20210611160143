@@ -37,4 +37,3 @@ build/
 
 *.job.lock
 .docker-compose.env
-history
