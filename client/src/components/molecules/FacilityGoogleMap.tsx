@@ -41,6 +41,7 @@ const MFLGoogleMapBg = compose(
 )((props: Props) => {
   const { position, isMarkerShown } = props;
   return (
+    //@ts-ignore
     <GoogleMap
       defaultZoom={15}
       defaultCenter={{ lat: position.lat, lng: position.lng + 0.016 }}

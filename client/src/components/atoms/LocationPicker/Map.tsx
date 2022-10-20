@@ -56,6 +56,7 @@ const MFLGoogleMapBg = compose(
 )((props: Props) => {
   const { position, isMarkerShown, onLocationClick } = props;
   return (
+    //@ts-ignore
     <GoogleMap
       onClick={pro => onLocationClick(pro)}
       defaultZoom={6.5}

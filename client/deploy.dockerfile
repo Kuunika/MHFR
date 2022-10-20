@@ -1,15 +1,13 @@
-FROM node:10-alpine3.9 as build
+FROM node:12 as build
 
 WORKDIR /app
 
 COPY package.json ./
 
-COPY package-lock.json ./
-
 RUN npm install --only=production
 
+RUN npm install typescript
 COPY ./ ./
-
 RUN npm run build
 
 
