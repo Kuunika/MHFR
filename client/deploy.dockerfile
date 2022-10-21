@@ -1,4 +1,4 @@
-FROM node:12 as build
+FROM node:14.17.3 as build
 
 WORKDIR /app
 
@@ -7,7 +7,9 @@ COPY package.json ./
 RUN npm install --only=production
 
 RUN npm install typescript
+
 COPY ./ ./
+
 RUN npm run build
 
 
