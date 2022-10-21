@@ -7,7 +7,7 @@ services:
     depends_on:
       - database
     ports:
-      - 4000:4000
+      - 4000:3000
     env_file:
       - ./.docker-compose.env
 
@@ -26,6 +26,7 @@ services:
   database:
     container_name: mhfr-database
     image: mysql:5.7.30
+    platform: linux/x86_64
     restart: always
     env_file:
       - ./.docker-compose.env
@@ -35,5 +36,13 @@ services:
       - "3306"
     volumes:
       - mhfr_data:/var/lib/mysql
+  proxy:
+    container_name: nginx-proxy
+    restart: always
+    build:
+      context: ./reverse_proxy/
+      dockerfile: Dockerfile
+    ports:
+      - "81:80"
 volumes:
   mhfr_data:
