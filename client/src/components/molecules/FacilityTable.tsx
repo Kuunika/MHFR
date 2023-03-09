@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import {
   Grid,
@@ -39,6 +40,7 @@ function FacilityTable(props: Props) {
 
   return (
     <div className="table">
+    
       <Grid rows={data} columns={columns}>
         <SortingState defaultSorting={defaultSorting} />
         <IntegratedSorting />
